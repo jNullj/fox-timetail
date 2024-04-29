@@ -1,0 +1,12 @@
+{
+    "name": "FoxTimeTail",
+    "start_url": "/",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "/icons/main.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

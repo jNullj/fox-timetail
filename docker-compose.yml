@@ -1,0 +1,10 @@
+version: '3'
+services:
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - clocl2cloc_db:/app/db
+    ports:
+      - 8097:8097

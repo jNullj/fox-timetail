@@ -1,0 +1,86 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 10vh); /* Subtract the height of the footer */
+}
+
+@media  screen and (min-aspect-ratio: 1/1) {
+    main {
+        flex-direction: row;
+    }
+}
+
+.mainButton {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 3vh;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10vw;
+    margin: 2vh;
+    cursor: pointer;
+    flex: 1;
+    align-self: stretch;
+}
+
+#exitButton {
+    background-color: #f44336;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10vh;
+    background-color: #000;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: min(5vh, 20vw);
+}
+
+footer .menu {
+    display: flex;
+    list-style: none;
+    height: 100%;
+    padding: 0;
+    align-items: center;
+}
+footer .menu-item {
+    margin: 0 3vh;
+}
+footer .menu-item img {
+    height: 8vh;
+    width: auto;
+    max-width: 20vw;
+    object-fit: contain;
+}
+
+footer #statusIcon {
+    display: inline-block;
+    width: 5vh;
+    height: 5vh;
+    max-width: 20vw;
+    max-height: 20vw;
+    background-color: red;
+    border-radius: 50%;
+}
+
+footer #statusIcon.active {
+    background-color: green;
+}
+
+.invertColor {
+    filter: invert(1);
+}
