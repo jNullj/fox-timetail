@@ -7,3 +7,6 @@ services:
       - clocl2cloc_db:/app/db
     ports:
       - 8097:8097
+
+volumes:
+  clocl2cloc_db:
