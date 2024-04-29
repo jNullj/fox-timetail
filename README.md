@@ -25,7 +25,7 @@ fox-timetail/web - webapp
 ## web server installation
 ### docker
 ```
-docker-compose up
+docker compose up -d
 ```
 ### manual
 ```
