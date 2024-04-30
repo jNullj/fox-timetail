@@ -47,7 +47,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: min(5vh, 20vw);
+    font-size: min(5vh, 7vw);
 }
 
 footer .menu {
@@ -58,7 +58,7 @@ footer .menu {
     align-items: center;
 }
 footer .menu-item {
-    margin: 0 3vh;
+    margin: 3vh 0;
 }
 footer .menu-item img {
     height: 8vh;
@@ -69,10 +69,8 @@ footer .menu-item img {
 
 footer #statusIcon {
     display: inline-block;
-    width: 5vh;
-    height: 5vh;
-    max-width: 20vw;
-    max-height: 20vw;
+    width: min(5vh, 10vw);
+    height: min(5vh, 10vw);
     background-color: red;
     border-radius: 50%;
 }
