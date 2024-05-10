@@ -4,13 +4,31 @@ Fox-TimeTail, tailing your work-time, is a webapp (with a planned Android Wear a
 
 features:
 - [x] clock in and out in a sipmle UI
-- [x] display history - basic, will be improved
+    - [x] clock in
+    - [x] clock out
+    - [x] display status and daily total
+- [] display history - currently only basic month values are displayed
+    - [] display history for the current month
+    - [] display history for previous months
+    - [] display history for a specific day
+    - [] display total hours  for this month on the main page
+- [] display statistics
 - [] add breaks
+- [] add sick days and vacation days
+    - [] set balance
+    - [] set the gain per month
+    - [] display balance
 - [] add notes
 - [x] webapp for mobile and desktop
 - [] offline mode - WIP
+    - [x] store requests and send them when online
+    - [] store data locally
+    - [] display status when offline
+    - [] display connection status indication
 - [] export formats: TBD
 - [] import fromats: TBD
+- [] multi-user support: TBD
+- [] statistics: TBD
 
 ## Screenshots
 
