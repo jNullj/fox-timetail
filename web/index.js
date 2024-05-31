@@ -235,21 +235,8 @@ app.post('/api/exit', (req, res) => {
 })
 
 app.get('/api/sessionTime', (req, res) => {
-    const currentDate = new Date().toLocaleDateString()
-    const currentDayHistory = history.filter(entry => entry.time.toLocaleDateString() === currentDate)
-    currentDayHistory.sort((a, b) => a.time - b.time)
-    let sessionTime = 0
-    let isAtWork = false
-    let enterHistory = currentDayHistory.filter(entry => entry.type === 'enter').map(entry => entry.time)
-    let exitHistory = currentDayHistory.filter(entry => entry.type === 'exit').map(entry => entry.time)
-
-    for (let i = 0; i < exitHistory.length; i++) {
-        sessionTime += exitHistory[i] - enterHistory[i]
-    }
-    if (enterHistory.length > exitHistory.length) {
-        sessionTime += new Date() - enterHistory[enterHistory.length - 1]
-        isAtWork = true
-    }
+    const sessionTime = calculateDailyTime(new Date())
+    const isAtWork = isCurrentlyAtWork()
     res.send({ sessionTime, isAtWork })
 })
 
