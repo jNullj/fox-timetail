@@ -1,12 +1,17 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const fs = require('fs')
+import express from 'express'
+import bodyParser from 'body-parser'
+import fs from 'fs'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 
 const app = express()
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 const port = 8097
 let history = []
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 if (!fs.existsSync(__dirname + '/db')) {
     fs.mkdirSync(__dirname + '/db')
