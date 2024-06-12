@@ -1,3 +1,5 @@
+import { calculateDailyTime, jsonToHistory } from "./history_utils.mjs"
+
 document.addEventListener('DOMContentLoaded', () => {
     const entranceButton = document.getElementById('entranceButton')
     const exitButton = document.getElementById('exitButton')
@@ -21,9 +23,28 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('/api/history')
         .then(res => res.json())
         .then(data => {
-            const history = data.history
+            const history = jsonToHistory(data.history)
             history.sort((a, b) => a.time - b.time)
-            const formattedHistory = history.map(entry => `${entry.type}: ${new Date(entry.time).toLocaleString()}`)
+            const groupedHistory = history.reduce((acc, curr) => {
+                const date = curr.time.toLocaleDateString()
+                if (!acc[date]) {
+                    acc[date] = []
+                }
+                acc[date].push(curr)
+                return acc
+            }, {})
+            const formattedHistory = Object.entries(groupedHistory).map(([date, entries]) => {
+                const dailyTime = calculateDailyTime(history, new Date(date))
+                const hours = Math.floor(dailyTime.getTime() / (1000 * 60 * 60))
+                const minutes = Math.floor((dailyTime.getTime() / (1000 * 60)) % 60)
+                const formattedDailyTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+                let timeEventsLog = ''
+                for(let i = 0; i < entries.length; i++) {
+                    const prefix = entries[i].type === 'enter' ? 'i' : 'o'
+                    timeEventsLog += `${prefix}: ${entries[i].time.toLocaleTimeString(undefined, { hour12: false, hour: '2-digit', minute: '2-digit' })} `
+                }
+                return `${date}@${formattedDailyTime} - ${timeEventsLog}`
+            });
             alert(`Entrances and Exits:\n${formattedHistory.join('\n')}`)
         })
     })

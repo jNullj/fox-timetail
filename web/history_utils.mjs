@@ -39,3 +39,15 @@ export function isCurrentlyAtWork(history) {
 
     return enterHistory.length > exitHistory.length;
 }
+
+/**
+ * JSON to history object
+ * @param {Object} json the JSON object to convert
+ * @returns {Array} the history object
+ */
+export function jsonToHistory(json) {
+    return json.map(entry => {
+        entry.time = new Date(entry.time)
+        return entry
+    })
+}

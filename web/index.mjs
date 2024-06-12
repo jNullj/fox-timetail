@@ -81,6 +81,7 @@ app.get('/', (req, res) => {
 app.use('/home.html', express.static(__dirname + '/home.html'))
 app.use('/css/home.css', express.static(__dirname + '/home.css'))
 app.use('/js/home.js', express.static(__dirname + '/home.js'))
+app.use('/js/history_utils.mjs', express.static(__dirname + '/history_utils.mjs'))
 app.use('/icons', express.static(__dirname + '/icons'))
 app.use('/manifest.json', express.static(__dirname + '/manifest.json'))
 app.use('/serviceWorker.js', express.static(__dirname + '/serviceWorker.js'))
