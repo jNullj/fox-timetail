@@ -33,13 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('/api/sessionTime')
         .then(res => res.json())
         .then(data => {
-            const sessionTime = data.sessionTime
+            const sessionTime = new Date(data.sessionTime).getTime()
             const hours = Math.floor(sessionTime / (1000 * 60 * 60))
-            const minutes = Math.floor((sessionTime % (1000 * 60 * 60)) / (1000 * 60))
-            const seconds = Math.floor((sessionTime % (1000 * 60)) / 1000)
+            const minutes = Math.floor((sessionTime / (1000 * 60)) % 60)
+            const seconds = Math.floor((sessionTime / 1000) % 60)
             const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-            currentTime.innerText = formattedTime;
-            dayPercentage.innerText = Math.floor((data.sessionTime / workdayMs) * 100) + '%'
+            currentTime.innerText = formattedTime
+            dayPercentage.innerText = Math.floor((sessionTime / workdayMs) * 100) + '%'
             statusIcon.className = data.isAtWork ? 'active' : 'inactive'
         })
     }, 1000)

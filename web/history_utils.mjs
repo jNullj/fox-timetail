@@ -23,7 +23,7 @@ export function calculateDailyTime(history, date) {
     if (enterHistory.length > exitHistory.length) {
         sessionTime += new Date() - enterHistory[enterHistory.length - 1];
     }
-    return sessionTime;
+    return new Date(sessionTime);
 }
 
 /**
