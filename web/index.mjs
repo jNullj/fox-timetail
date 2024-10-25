@@ -82,6 +82,8 @@ app.use('/home.html', express.static(__dirname + '/home.html'))
 app.use('/css/home.css', express.static(__dirname + '/home.css'))
 app.use('/js/home.js', express.static(__dirname + '/home.js'))
 app.use('/js/history_utils.mjs', express.static(__dirname + '/history_utils.mjs'))
+app.use('/js/historyModal.mjs', express.static(__dirname + '/historyModal.mjs'))
+app.use('/js/modal.mjs', express.static(__dirname + '/modal.mjs'))
 app.use('/icons', express.static(__dirname + '/icons'))
 app.use('/manifest.json', express.static(__dirname + '/manifest.json'))
 app.use('/serviceWorker.js', express.static(__dirname + '/serviceWorker.js'))
@@ -213,7 +215,27 @@ app.get('/api/sessionTime', (req, res) => {
 })
 
 app.get('/api/history', (req, res) => {
-    res.send({ history })
+    if (req.query.year && req.query.month) {
+        req.query.year = parseInt(req.query.year)
+        req.query.month = parseInt(req.query.month)
+        const date = new Date(req.query.year, req.query.month - 1)
+        if (date > new Date()) {
+            // loadHistoryFromFile is not built for future dates, TODO in history as obj refactor
+            return res.send({ history: [] })
+        }
+        if (dateToYearMonthString(date) === loadHistoryFromFile.lastLoaded) {
+            // avoid the file load, its already loaded
+            return res.send({ history })
+        }
+        const oldHistory = loadHistoryFromFile({ oldDate: date })
+        return res.send({ history: oldHistory })
+    } else if (req.query.year) {
+        return res.status(400).send('Missing month parameter')
+    } else if (req.query.month) {
+        return res.status(400).send('Missing year parameter')
+    } else {
+        return res.send({ history })
+    }
 })
 
 app.listen(port, () => {

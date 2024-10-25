@@ -7,10 +7,10 @@ features:
     - [x] clock in
     - [x] clock out
     - [x] display status and daily total
-- [ ] display history - currently only basic month values are displayed
-    - [ ] display history for the current month
-    - [ ] display history for previous months
-    - [ ] display history for a specific day
+- [x] display history - currently only basic month values are displayed
+    - [x] display history for the current month
+    - [x] display history for previous months
+    - [x] display history for a specific day
     - [ ] display total hours  for this month on the main page
 - [ ] display statistics
 - [ ] add breaks

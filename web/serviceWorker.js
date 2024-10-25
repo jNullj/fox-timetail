@@ -1,4 +1,4 @@
-const cacheName = 'FoxTimeTail-0.1.0'
+const cacheName = 'FoxTimeTail-0.2.0'
 const filesToCache = [
     '/',
     '/js/home.js',
@@ -7,6 +7,9 @@ const filesToCache = [
     '/icons/history.svg',
     '/icons/settings.svg',
     '/home.html',
+    '/modal.mjs',
+    '/history_utils.mjs',
+    '/historyModal.mjs',
 ]
 const callsToSync = [
     '/api/enter',
