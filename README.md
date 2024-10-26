@@ -27,7 +27,13 @@ features:
     - [ ] display connection status indication
 - [ ] export formats: TBD
 - [ ] import fromats: TBD
-- [ ] multi-user support: TBD
+- [ ] multi-user support:
+    - [ ] login
+    - [ ] per user settings
+        - [ ] work hours per day
+        - [ ] current sick days and vacation days
+        - [ ] sick and vacation gain per month 
+    - [ ] per user history files
 - [ ] statistics: TBD
 
 ## Screenshots
