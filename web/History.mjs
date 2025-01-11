@@ -67,6 +67,17 @@ export class History {
     }
 
     /**
+     * Deserialize the history data.
+     * @private
+     * @param {string} data - The history data in JSON format.
+     * @returns {void}
+     */
+    deserialize(data) {
+        this.array = JSON.parse(data).map(entry => new HistoryItem(entry.type, new Date(entry.time)))
+        this.sortByTimeAsc()
+    }
+
+    /**
      * Load the history from a JSON file or local storage.
      * @private
      * @param {Date} date - The date to load the history from if not provided use current.
@@ -86,8 +97,7 @@ export class History {
                 data = fs.readFileSync(__dirname + `/db/history-${yearMonth}.json`, 'utf8')
             }
             this.loadedFile = yearMonth
-            this.array = JSON.parse(data).map(entry => new HistoryItem(entry.type, new Date(entry.time)))
-            this.sortByTimeAsc()
+            this.deserialize(data)
             console.log(`Loaded history from ${yearMonth}`)
         } catch (err) {
             if (isClient || err.code != 'ENOENT') { throw err } // Throw error if it's not a file not found error
