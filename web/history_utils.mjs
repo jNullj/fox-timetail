@@ -12,7 +12,6 @@
 export function calculateDailyTime(history, date) {
     const targetDate = date.toLocaleDateString();
     const targetDayHistory = history.filter(entry => entry.time.toLocaleDateString() === targetDate);
-    targetDayHistory.sort((a, b) => a.time - b.time);
     let sessionTime = 0;
     let enterHistory = targetDayHistory.filter(entry => entry.type === 'enter').map(entry => entry.time);
     let exitHistory = targetDayHistory.filter(entry => entry.type === 'exit').map(entry => entry.time);

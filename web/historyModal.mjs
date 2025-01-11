@@ -86,7 +86,6 @@ export class HistoryModal extends Modal {
         .then(res => res.json())
         .then(data => {
             const history = jsonToHistory(data.history)
-            history.sort((a, b) => a.time - b.time)
             const groupedHistory = history.reduce((acc, curr) => {
                 const date = curr.time.toLocaleDateString()
                 if (!acc[date]) {
