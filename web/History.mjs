@@ -202,6 +202,20 @@ export class History {
     firstEventBefore(time) {
         return this.array.reverse().find(entry => entry.time < time)
     }
+
+    /**
+     * Check if currently at work.
+     * @returns {boolean} true if currently at work, false otherwise
+     */
+    isAtWork() {
+        if (this.isEmpty) {
+            return false // todo: handle loading old month for edge case, with timeout or read file for earliest entry
+        }
+        if (this.loadedFile !== getCurrentYearMonth()) {
+            return false
+        }
+        return this.last.type === 'enter'
+    }
 }
 
 /**

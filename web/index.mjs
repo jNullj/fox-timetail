@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 import fs from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
-import { calculateDailyTime, isCurrentlyAtWork } from './history_utils.mjs'
+import { calculateDailyTime } from './history_utils.mjs'
 import { History, HistoryItem } from './History.mjs'
 
 const app = express()
@@ -157,7 +157,7 @@ app.post('/api/exit', (req, res) => {
 
 app.get('/api/sessionTime', (req, res) => {
     const sessionTime = calculateDailyTime(history, new Date())
-    const isAtWork = isCurrentlyAtWork(history)
+    const isAtWork = history.isAtWork()
     res.send({ sessionTime, isAtWork })
 })
 

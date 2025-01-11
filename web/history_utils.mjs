@@ -26,17 +26,3 @@ export function calculateDailyTime(history, date) {
     }
     return new Date(sessionTime);
 }
-
-/**
- * Checks if currently at work
- * @param {History} history the history of work time entries
- * @returns {boolean} true if currently at work, false otherwise
- */
-export function isCurrentlyAtWork(history) {
-    const targetDate = new Date().toLocaleDateString();
-    const targetDayHistory = history.array.filter(entry => entry.time.toLocaleDateString() === targetDate);
-    let enterHistory = targetDayHistory.filter(entry => entry.type === 'enter').map(entry => entry.time);
-    let exitHistory = targetDayHistory.filter(entry => entry.type === 'exit').map(entry => entry.time);
-
-    return enterHistory.length > exitHistory.length;
-}
