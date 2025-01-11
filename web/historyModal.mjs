@@ -105,7 +105,8 @@ export class HistoryModal extends Modal {
                     const prefix = entries[i].type === 'enter' ? 'i' : 'o'
                     timeEventsLog += `${prefix}: ${entries[i].time.toLocaleTimeString(undefined, { hour12: false, hour: '2-digit', minute: '2-digit' })} `
                 }
-                return `${date}@${formattedDailyTime} - ${timeEventsLog}`
+                const dayOfMonths = (new Date(date)).getDate()
+                return `${dayOfMonths}@${formattedDailyTime} - ${timeEventsLog}`
             })
             this.historyLog.innerText = `Entrances and Exits for ${this.year}-${this.month}:\n${formattedHistory.join('\n')}`
             this.historyLog.style.display = 'block'
