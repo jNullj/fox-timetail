@@ -11,6 +11,7 @@ features:
     - [x] display history for the current month
     - [x] display history for previous months
     - [x] display history for a specific day
+    - [ ] display total hours for the current month (history view)
     - [ ] display total hours  for this month on the main page
 - [ ] display statistics
 - [ ] add breaks
