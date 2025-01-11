@@ -5,11 +5,13 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+const isClient = typeof window !== 'undefined'
+
 /**
  * History is a class that represents a history of work events.
  * @class
  * @property {HistoryItem[]} array - The array of history of work events.
- * @property {string} loadedFile - The history JSON file that was last loaded.
+ * @property {string} loadedFile - The history JSON file or local storage key that was last loaded.
  */
 export class History {
     /**
@@ -46,17 +48,22 @@ export class History {
     }
 
     /**
-     * Save the history to a JSON file.
+     * Save the history to a JSON file or local storage.
      * @private
      * @returns {void}
      */
     saveToFile() {
         const yearMonth = getCurrentYearMonth()
-        fs.writeFileSync(__dirname + `/db/history-${yearMonth}.json`, JSON.stringify(this.array))
+        const data = JSON.stringify(this.array)
+        if (isClient) {
+            localStorage.setItem(`history-${yearMonth}`, data)
+        } else {
+            fs.writeFileSync(__dirname + `/db/history-${yearMonth}.json`, data)
+        }
     }
 
     /**
-     * Load the history from a JSON file.
+     * Load the history from a JSON file or local storage.
      * @private
      * @param {Date} date - The date to load the history from if not provided use current.
      * @returns {void}
@@ -67,13 +74,19 @@ export class History {
         }
         const yearMonth = date ? dateToYearMonthString(date) : getCurrentYearMonth()
         try {
-            const data = fs.readFileSync(__dirname + `/db/history-${yearMonth}.json`, 'utf8')
+            let data
+            if (isClient) {
+                data = localStorage.getItem(`history-${yearMonth}`)
+                if (!data) throw new Error('No data found in local storage')
+            } else {
+                data = fs.readFileSync(__dirname + `/db/history-${yearMonth}.json`, 'utf8')
+            }
             this.loadedFile = yearMonth
             this.array = JSON.parse(data).map(entry => new HistoryItem(entry.type, new Date(entry.time)))
             this.sortByTimeAsc()
             console.log(`Loaded history from ${yearMonth}`)
         } catch (err) {
-            if (err.code != 'ENOENT') { throw err } // Throw error if it's not a file not found error
+            if (isClient || err.code != 'ENOENT') { throw err } // Throw error if it's not a file not found error
             console.log(`No history file found for ${yearMonth}. Creating a new obj...`)
             this.loadedFile = yearMonth
             this.array = []
