@@ -1,5 +1,6 @@
 import { Modal } from './modal.mjs'
-import { calculateDailyTime, jsonToHistory } from './history_utils.mjs'
+import { calculateDailyTime } from './history_utils.mjs'
+import { History } from './History.mjs'
 
 export class HistoryModal extends Modal {
     constructor(parent) {
@@ -85,8 +86,8 @@ export class HistoryModal extends Modal {
         fetch(`/api/history?year=${this.year}&month=${this.month}`)
         .then(res => res.json())
         .then(data => {
-            const history = jsonToHistory(data.history)
-            const groupedHistory = history.reduce((acc, curr) => {
+            const history = new History(new Date(`${this.year}-${this.month}`), data.history)
+            const groupedHistory = history.array.reduce((acc, curr) => {
                 const date = curr.time.toLocaleDateString()
                 if (!acc[date]) {
                     acc[date] = []

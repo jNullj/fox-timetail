@@ -29,6 +29,7 @@ app.use('/css/home.css', express.static(__dirname + '/home.css'))
 app.use('/js/home.js', express.static(__dirname + '/home.js'))
 app.use('/js/history_utils.mjs', express.static(__dirname + '/history_utils.mjs'))
 app.use('/js/historyModal.mjs', express.static(__dirname + '/historyModal.mjs'))
+app.use('/js/History.mjs', express.static(__dirname + '/History.mjs'))
 app.use('/js/modal.mjs', express.static(__dirname + '/modal.mjs'))
 app.use('/icons', express.static(__dirname + '/icons'))
 app.use('/manifest.json', express.static(__dirname + '/manifest.json'))
@@ -155,8 +156,8 @@ app.post('/api/exit', (req, res) => {
 })
 
 app.get('/api/sessionTime', (req, res) => {
-    const sessionTime = calculateDailyTime(history.array, new Date())   // todo refactor to use history class
-    const isAtWork = isCurrentlyAtWork(history.array)   // todo refactor to use history class
+    const sessionTime = calculateDailyTime(history, new Date())
+    const isAtWork = isCurrentlyAtWork(history)
     res.send({ sessionTime, isAtWork })
 })
 

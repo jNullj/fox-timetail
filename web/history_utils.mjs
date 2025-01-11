@@ -3,15 +3,17 @@
  * @module history_utils
  */
 
+import { History } from "./History.mjs";
+
 /**
  * Calculates the time spent at work for a given date
- * @param {Array} history the history of work time entries
+ * @param {History} history the history of work time entries
  * @param {Date} date the date to calculate the time spent at work
  * @returns {Date} the time spent at work
  */
 export function calculateDailyTime(history, date) {
     const targetDate = date.toLocaleDateString();
-    const targetDayHistory = history.filter(entry => entry.time.toLocaleDateString() === targetDate);
+    const targetDayHistory = history.array.filter(entry => entry.time.toLocaleDateString() === targetDate);
     let sessionTime = 0;
     let enterHistory = targetDayHistory.filter(entry => entry.type === 'enter').map(entry => entry.time);
     let exitHistory = targetDayHistory.filter(entry => entry.type === 'exit').map(entry => entry.time);
@@ -27,26 +29,14 @@ export function calculateDailyTime(history, date) {
 
 /**
  * Checks if currently at work
- * @param {Array} history the history of work time entries
+ * @param {History} history the history of work time entries
  * @returns {boolean} true if currently at work, false otherwise
  */
 export function isCurrentlyAtWork(history) {
     const targetDate = new Date().toLocaleDateString();
-    const targetDayHistory = history.filter(entry => entry.time.toLocaleDateString() === targetDate);
+    const targetDayHistory = history.array.filter(entry => entry.time.toLocaleDateString() === targetDate);
     let enterHistory = targetDayHistory.filter(entry => entry.type === 'enter').map(entry => entry.time);
     let exitHistory = targetDayHistory.filter(entry => entry.type === 'exit').map(entry => entry.time);
 
     return enterHistory.length > exitHistory.length;
-}
-
-/**
- * JSON to history object
- * @param {Object} json the JSON object to convert
- * @returns {Array} the history object
- */
-export function jsonToHistory(json) {
-    return json.map(entry => {
-        entry.time = new Date(entry.time)
-        return entry
-    })
 }

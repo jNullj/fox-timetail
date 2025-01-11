@@ -20,13 +20,19 @@ if (!isClient) {
 export class History {
     /**
      * Create a new History object.
-     * @param {Date} date - The date to load the history from if not provided use current.
+     * @param {Date} [date] - The date to load the history from if not provided use current.
+     * @param {string} [data] - The serialized history data. If provided, it will be used instead of loading from file.
      */
-    constructor(date) {
-        if (date instanceof Date === false && date !== undefined) {
-            throw new Error('Date must be a Date object or undefined')
+    constructor(date, data) {
+        if (date && !(date instanceof Date)) {
+            throw new Error('Date must be a Date object')
         }
-        this.loadFromFile(date)
+        if (data && date) {
+            this.deserialize(data)
+            this.loadedFile = dateToYearMonthString(date)
+        } else {
+            this.loadFromFile(date)
+        }
     }
 
     /**
@@ -78,11 +84,12 @@ export class History {
     /**
      * Deserialize the history data.
      * @private
-     * @param {string} data - The history data in JSON format.
+     * @param {string|object} data - The history data in JSON format string or object.
      * @returns {void}
      */
     deserialize(data) {
-        this.array = JSON.parse(data).map(entry => new HistoryItem(entry.type, new Date(entry.time)))
+        const parsedData = typeof data === 'string' ? JSON.parse(data) : data
+        this.array = parsedData.map(entry => new HistoryItem(entry.type, new Date(entry.time)))
         this.sortByTimeAsc()
     }
 
