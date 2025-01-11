@@ -131,6 +131,7 @@ export class HistoryModal extends Modal {
             this.historyLog.innerHTML = ''
             this.historyLog.appendChild(title)
             this.historyLog.appendChild(table)
+            this.historyLog.classList.add('history-log')
             this.historyLog.style.display = 'block'
         })
     }
