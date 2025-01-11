@@ -1,11 +1,15 @@
-import fs from 'fs'
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
 const isClient = typeof window !== 'undefined'
+
+let fs, __filename, __dirname
+
+if (!isClient) {
+    fs = await import('fs')
+    const dirname = (await import('path')).dirname
+    const fileURLToPath = (await import('url')).fileURLToPath
+
+    __filename = fileURLToPath(import.meta.url)
+    __dirname = dirname(__filename)
+}
 
 /**
  * History is a class that represents a history of work events.
