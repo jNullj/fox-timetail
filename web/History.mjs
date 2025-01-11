@@ -69,8 +69,7 @@ export class History {
         try {
             const data = fs.readFileSync(__dirname + `/db/history-${yearMonth}.json`, 'utf8')
             this.loadedFile = yearMonth
-            this.array = JSON.parse(data)
-            this.array.map(entry => new HistoryItem(entry.type, new Date(entry.time)))
+            this.array = JSON.parse(data).map(entry => new HistoryItem(entry.type, new Date(entry.time)))
             this.sortByTimeAsc()
             console.log(`Loaded history from ${yearMonth}`)
         } catch (err) {
