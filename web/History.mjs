@@ -52,13 +52,22 @@ export class History {
     }
 
     /**
+     * Serialize the history data.
+     * @private
+     * @returns {string} The history data in JSON format.
+     */
+    serialize() {
+        return JSON.stringify(this.array)
+    }
+
+    /**
      * Save the history to a JSON file or local storage.
      * @private
      * @returns {void}
      */
     saveToFile() {
         const yearMonth = getCurrentYearMonth()
-        const data = JSON.stringify(this.array)
+        const data = this.serialize()
         if (isClient) {
             localStorage.setItem(`history-${yearMonth}`, data)
         } else {
