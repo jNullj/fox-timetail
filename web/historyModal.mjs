@@ -95,20 +95,42 @@ export class HistoryModal extends Modal {
                 acc[date].push(curr)
                 return acc
             }, {})
-            const formattedHistory = Object.entries(groupedHistory).map(([date, entries]) => {
-                const dailyTime = calculateDailyTime(history, new Date(date))
-                const hours = Math.floor(dailyTime.getTime() / (1000 * 60 * 60))
-                const minutes = Math.floor((dailyTime.getTime() / (1000 * 60)) % 60)
-                const formattedDailyTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`
-                let timeEventsLog = ''
-                for (let i = 0; i < entries.length; i++) {
-                    const prefix = entries[i].type === 'enter' ? 'i' : 'o'
-                    timeEventsLog += `${prefix}: ${entries[i].time.toLocaleTimeString(undefined, { hour12: false, hour: '2-digit', minute: '2-digit' })} `
-                }
-                const dayOfMonths = (new Date(date)).getDate()
-                return `${dayOfMonths}@${formattedDailyTime} - ${timeEventsLog}`
-            })
-            this.historyLog.innerText = `Entrances and Exits for ${this.year}-${this.month}:\n${formattedHistory.join('\n')}`
+            const title = document.createElement('h3')
+            title.textContent = `Entrances and Exits for ${this.year}-${this.month}`
+            const table = document.createElement('table')
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Daily Time</th>
+                        <th>Events</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${Object.entries(groupedHistory).map(([date, entries]) => {
+                        const dailyTime = calculateDailyTime(history, new Date(date))
+                        const hours = Math.floor(dailyTime.getTime() / (1000 * 60 * 60))
+                        const minutes = Math.floor((dailyTime.getTime() / (1000 * 60)) % 60)
+                        const formattedDailyTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`
+                        let timeEventsLog = ''
+                        for (let i = 0; i < entries.length; i++) {
+                            const prefix = entries[i].type === 'enter' ? 'i' : 'o'
+                            timeEventsLog += `${prefix}: ${entries[i].time.toLocaleTimeString(undefined, { hour12: false, hour: '2-digit', minute: '2-digit' })} `
+                        }
+                        const dayOfMonths = (new Date(date)).getDate()
+                        return `
+                            <tr>
+                                <td>${dayOfMonths}</td>
+                                <td>${formattedDailyTime}</td>
+                                <td>${timeEventsLog}</td>
+                            </tr>
+                        `
+                    }).join('')}
+                </tbody>
+            `
+            this.historyLog.innerHTML = ''
+            this.historyLog.appendChild(title)
+            this.historyLog.appendChild(table)
             this.historyLog.style.display = 'block'
         })
     }
