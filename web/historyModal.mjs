@@ -1,5 +1,4 @@
 import { Modal } from './modal.mjs'
-import { calculateDailyTime } from './history_utils.mjs'
 import { History } from './History.mjs'
 
 export class HistoryModal extends Modal {
@@ -108,7 +107,7 @@ export class HistoryModal extends Modal {
                 </thead>
                 <tbody>
                     ${Object.entries(groupedHistory).map(([date, entries]) => {
-                        const dailyTime = calculateDailyTime(history, new Date(date))
+                        const dailyTime = history.dailyTime(new Date(date))
                         const hours = Math.floor(dailyTime.getTime() / (1000 * 60 * 60))
                         const minutes = Math.floor((dailyTime.getTime() / (1000 * 60)) % 60)
                         const formattedDailyTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`

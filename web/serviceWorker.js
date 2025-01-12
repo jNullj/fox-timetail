@@ -8,7 +8,6 @@ const filesToCache = [
     '/icons/settings.svg',
     '/home.html',
     '/modal.mjs',
-    '/history_utils.mjs',
     '/historyModal.mjs',
 ]
 const callsToSync = [

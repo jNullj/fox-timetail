@@ -216,6 +216,32 @@ export class History {
         }
         return this.last.type === 'enter'
     }
+
+    /**
+     * Returns the time spent at work for a given date.
+     * @param {Date|undefined} date the date to calculate the time spent at work, defaults to today
+     * @returns {Date} the time spent at work
+     */
+    dailyTime(date) {
+        if (this.isEmpty) {
+            return new Date(0)
+        }
+        if (!date) {
+            date = new Date()
+        }
+        const entries = this.array.filter(entry => entry.time.toDateString() === date.toDateString())
+        if (entries.length === 0) {
+            return new Date(0)
+        }
+        if (entries.length % 2 !== 0) {
+            entries.push(new HistoryItem('exit', new Date()))
+        }
+        let time = 0
+        for (let i = 0; i < entries.length; i += 2) {
+            time += entries[i + 1].time - entries[i].time
+        }
+        return new Date(time)
+    }
 }
 
 /**
