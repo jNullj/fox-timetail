@@ -114,8 +114,11 @@ export class HistoryModal extends Modal {
                         const formattedDailyTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`
                         let timeEventsLog = ''
                         for (let i = 0; i < entries.length; i++) {
-                            const prefix = entries[i].type === 'enter' ? 'i' : 'o'
-                            timeEventsLog += `${prefix}: ${entries[i].time.toLocaleTimeString(undefined, { hour12: false, hour: '2-digit', minute: '2-digit' })} `
+                            const postfix = entries[i].type === 'enter' ? '➡️' : '🕓'
+                            timeEventsLog += `${entries[i].time.toLocaleTimeString(undefined, { hour12: false, hour: '2-digit', minute: '2-digit' })}${postfix}`
+                        }
+                        if (timeEventsLog.endsWith('🕓')) {
+                            timeEventsLog = timeEventsLog.slice(0, -2)
                         }
                         const dayOfMonths = (new Date(date)).getDate()
                         return `
