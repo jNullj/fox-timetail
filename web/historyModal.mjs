@@ -97,6 +97,7 @@ export class HistoryModal extends Modal {
             const title = document.createElement('h3')
             title.textContent = `Entrances and Exits for ${this.year}-${this.month}`
             const table = document.createElement('table')
+            let monthlyTime = new Date(0)
             table.innerHTML = `
                 <thead>
                     <tr>
@@ -108,6 +109,7 @@ export class HistoryModal extends Modal {
                 <tbody>
                     ${Object.entries(groupedHistory).map(([date, entries]) => {
                         const dailyTime = history.dailyTime(new Date(date))
+                        monthlyTime = new Date(monthlyTime.getTime() + dailyTime.getTime())
                         const hours = Math.floor(dailyTime.getTime() / (1000 * 60 * 60))
                         const minutes = Math.floor((dailyTime.getTime() / (1000 * 60)) % 60)
                         const formattedDailyTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`
@@ -128,6 +130,11 @@ export class HistoryModal extends Modal {
                             </tr>
                         `
                     }).join('')}
+                    <tr>
+                        <td>Total</td>
+                        <td>${Math.floor(monthlyTime.getTime() / (1000 * 60 * 60))}h ${Math.floor((monthlyTime.getTime() / (1000 * 60)) % 60)}m</td>
+                        <td></td>
+                    </tr>
                 </tbody>
             `
             this.historyLog.innerHTML = ''
