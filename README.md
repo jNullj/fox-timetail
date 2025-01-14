@@ -26,7 +26,10 @@ features:
     - [ ] store data locally
     - [ ] display status when offline
     - [ ] display connection status indication
-- [ ] export formats: TBD
+- [ ] export formats:
+    - [ ] csv
+    - [ ] pdf
+    - [ ] json
 - [ ] import fromats: TBD
 - [ ] multi-user support:
     - [ ] login
