@@ -29,7 +29,7 @@ features:
 - [ ] export formats:
     - [ ] csv
     - [ ] pdf
-    - [ ] json
+    - [x] json (per month)
 - [ ] import fromats: TBD
 - [ ] multi-user support:
     - [ ] login

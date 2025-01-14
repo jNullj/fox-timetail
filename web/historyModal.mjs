@@ -137,11 +137,29 @@ export class HistoryModal extends Modal {
                     </tr>
                 </tbody>
             `
+            const downloadButton = this.createDownloadButton(data)
+
             this.historyLog.innerHTML = ''
             this.historyLog.appendChild(title)
             this.historyLog.appendChild(table)
+            this.historyLog.appendChild(downloadButton)
             this.historyLog.classList.add('history-log')
             this.historyLog.style.display = 'block'
         })
+    }
+
+    createDownloadButton(data) {
+        const downloadButton = document.createElement('button')
+        downloadButton.textContent = 'Download JSON'
+        downloadButton.addEventListener('click', () => {
+            const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `history_${this.year}_${this.month}.json`
+            a.click()
+            URL.revokeObjectURL(url)
+        })
+        return downloadButton
     }
 }
