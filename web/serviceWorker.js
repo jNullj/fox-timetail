@@ -45,10 +45,19 @@ self.addEventListener("activate", (event) => {
 self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request)
-        .then(response => response || fetch(event.request))
-        .catch(() => {
+        .then(response => {
+            if (response) {
+                return response
+            }
             const url = new URL(event.request.url)
-            if (callsToSync.includes(url.pathname)) {
+            if (!callsToSync.includes(url.pathname)) {
+                return fetch(event.request).catch(() => {
+                    return new Response('You are offline', {
+                        status: 503, statusText: 'Service Unavailable'
+                    })
+                })
+            }
+            return fetch(event.request).catch(() => {
                 // Open a transaction to the database
                 let dbReq = indexedDB.open('apiPendingRequests', 1)
 
@@ -60,17 +69,17 @@ self.addEventListener('fetch', event => {
                     req.onsuccess = function() {
                         self.registration.sync.register('syncPendingApiRequests')
                     }
-                };
+                }
 
                 dbReq.onupgradeneeded = function(event) {
                     let db = event.target.result
                     db.createObjectStore('apiPendingRequestsStore', { autoIncrement: true })
-                };
+                }
 
                 dbReq.onerror = function(event) {
-                    console.log('error opening database ' + event.target.errorCode);
-                };
-            }
+                    console.log('error opening database ' + event.target.errorCode)
+                }
+            })
         })
     )
 })

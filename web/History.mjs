@@ -274,6 +274,9 @@ export class History {
             if (response.status === 304) {
                 return new History(date, cachedData)
             }
+            if (response.status === 503) {
+                throw new Error('Service Unavailable')
+            }
             const data = await response.json()
             const etag = response.headers.get('ETag')
             if (etag) {
