@@ -17,9 +17,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     entranceButton.addEventListener('click', () => {
         fetch('/api/enter', { method: 'POST' })
+        .then(response => {
+            if (response.status === 503) {
+                const history = new History()
+                history.add('enter')
+            }
+        })
+        .catch(() => {
+            const history = new History()
+            history.add('enter')
+        })
     })
     exitButton.addEventListener('click', () => {
         fetch('/api/exit', { method: 'POST' })
+        .then(response => {
+            if (response.status === 503) {
+                const history = new History()
+                history.add('exit')
+            }
+        })
+        .catch(() => {
+            const history = new History()
+            history.add('exit')
+        })
     })
     historyButton.addEventListener('click', () => {
         historyModal.show()

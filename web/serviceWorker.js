@@ -79,6 +79,9 @@ self.addEventListener('fetch', event => {
                 dbReq.onerror = function(event) {
                     console.log('error opening database ' + event.target.errorCode)
                 }
+                return new Response('You are offline', {
+                    status: 503, statusText: 'Service Unavailable'
+                })
             })
         })
     )
