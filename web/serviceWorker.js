@@ -7,9 +7,9 @@ const filesToCache = [
     '/icons/history.svg',
     '/icons/settings.svg',
     '/home.html',
-    '/modal.mjs',
-    '/historyModal.mjs',
-    '/History.mjs',
+    '/js/modal.mjs',
+    '/js/historyModal.mjs',
+    '/js/History.mjs',
 ]
 const callsToSync = [
     '/api/enter',
