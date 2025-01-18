@@ -41,8 +41,8 @@ export class History {
      */
     add(item) {
         if (item instanceof HistoryItem === false &&
-            item instanceof string === false) {
-            throw new Error('Item must be a HistoryItem or a string')
+            item !== 'enter' && item !== 'exit') {
+            throw new Error('Item must be a HistoryItem or a fitting string')
         }
         if (typeof item === 'string') {
             item = new HistoryItem(item)
