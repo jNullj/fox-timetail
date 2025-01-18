@@ -1,4 +1,5 @@
 import { HistoryModal } from "./historyModal.mjs"
+import { History } from "./History.mjs"
 
 document.addEventListener('DOMContentLoaded', () => {
     const entranceButton = document.getElementById('entranceButton')
@@ -26,17 +27,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // update the current session time every second
     setInterval(() => {
-        fetch('/api/sessionTime')
-        .then(res => res.json())
-        .then(data => {
-            const sessionTime = new Date(data.sessionTime).getTime()
-            const hours = Math.floor(sessionTime / (1000 * 60 * 60))
-            const minutes = Math.floor((sessionTime / (1000 * 60)) % 60)
-            const seconds = Math.floor((sessionTime / 1000) % 60)
-            const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-            currentTime.innerText = formattedTime
-            dayPercentage.innerText = Math.floor((sessionTime / workdayMs) * 100) + '%'
-            statusIcon.className = data.isAtWork ? 'active' : 'inactive'
-        })
+        const now = new Date()
+        const year = now.getFullYear()
+        const month = now.getMonth() + 1
+        History.fetchFromApi(year, month)
+            .then(history => {
+                const sessionTime = history.dailyTime(now).getTime()
+                const hours = Math.floor(sessionTime / (1000 * 60 * 60))
+                const minutes = Math.floor((sessionTime / (1000 * 60)) % 60)
+                const seconds = Math.floor((sessionTime / 1000) % 60)
+                const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+                currentTime.innerText = formattedTime
+                dayPercentage.innerText = Math.floor((sessionTime / workdayMs) * 100) + '%'
+                statusIcon.className = history.isAtWork() ? 'active' : 'inactive'
+            })
     }, 1000)
 })
