@@ -256,12 +256,29 @@ export class History {
         if (typeof year !== 'number' || typeof month !== 'number' || !Number.isInteger(year) || !Number.isInteger(month) || year < 0 || month < 1 || month > 12) {
             throw new Error('Invalid year or month format')
         }
-        const response = await fetch(`/api/history?year=${year}&month=${month}`)
+        const date = new Date(year, month - 1)
+        const yearMonth = dateToYearMonthString(date)
+        const cachedData = localStorage.getItem(`history-${yearMonth}`)
+        const headers = {}
+        if (cachedData) {
+            const etag = localStorage.getItem(`etag-${yearMonth}`)
+            if (etag) {
+                headers['If-None-Match'] = etag
+            }
+        }
+        const response = await fetch(`/api/history?year=${year}&month=${month}`, { headers })
         if (response.status === 204) {
-            return new History(new Date(year, month - 1), [])
+            return new History(date, [])
+        }
+        if (response.status === 304) {
+            return new History(date, cachedData)
         }
         const data = await response.json()
-        const date = new Date(year, month - 1)
+        const etag = response.headers.get('ETag')
+        if (etag) {
+            localStorage.setItem(`etag-${yearMonth}`, etag)
+        }
+        localStorage.setItem(`history-${yearMonth}`, JSON.stringify(data.history))
         return new History(date, data.history)
     }
 }
