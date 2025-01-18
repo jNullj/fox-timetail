@@ -82,70 +82,68 @@ export class HistoryModal extends Modal {
     }
 
     showHistoryData() {
-        fetch(`/api/history?year=${this.year}&month=${this.month}`)
-        .then(res => res.json())
-        .then(data => {
-            const history = new History(new Date(`${this.year}-${this.month}`), data.history)
-            const groupedHistory = history.array.reduce((acc, curr) => {
-                const date = curr.time.toLocaleDateString()
-                if (!acc[date]) {
-                    acc[date] = []
-                }
-                acc[date].push(curr)
-                return acc
-            }, {})
-            const title = document.createElement('h3')
-            title.textContent = `Entrances and Exits for ${this.year}-${this.month}`
-            const table = document.createElement('table')
-            let monthlyTime = new Date(0)
-            table.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Daily Time</th>
-                        <th>Events</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${Object.entries(groupedHistory).map(([date, entries]) => {
-                        const dailyTime = history.dailyTime(new Date(date))
-                        monthlyTime = new Date(monthlyTime.getTime() + dailyTime.getTime())
-                        const hours = Math.floor(dailyTime.getTime() / (1000 * 60 * 60))
-                        const minutes = Math.floor((dailyTime.getTime() / (1000 * 60)) % 60)
-                        const formattedDailyTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`
-                        let timeEventsLog = ''
-                        for (let i = 0; i < entries.length; i++) {
-                            const postfix = entries[i].type === 'enter' ? '➡️' : '🕓'
-                            timeEventsLog += `${entries[i].time.toLocaleTimeString(undefined, { hour12: false, hour: '2-digit', minute: '2-digit' })}${postfix}`
-                        }
-                        if (timeEventsLog.endsWith('🕓')) {
-                            timeEventsLog = timeEventsLog.slice(0, -2)
-                        }
-                        const dayOfMonths = (new Date(date)).getDate()
-                        return `
-                            <tr>
-                                <td>${dayOfMonths}</td>
-                                <td>${formattedDailyTime}</td>
-                                <td>${timeEventsLog}</td>
-                            </tr>
-                        `
-                    }).join('')}
-                    <tr>
-                        <td>Total</td>
-                        <td>${Math.floor(monthlyTime.getTime() / (1000 * 60 * 60))}h ${Math.floor((monthlyTime.getTime() / (1000 * 60)) % 60)}m</td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            `
-            const downloadButton = this.createDownloadButton(data)
+        History.fetchFromApi(this.year, this.month)
+            .then(history => {
+                const groupedHistory = history.array.reduce((acc, curr) => {
+                    const date = curr.time.toLocaleDateString()
+                    if (!acc[date]) {
+                        acc[date] = []
+                    }
+                    acc[date].push(curr)
+                    return acc
+                }, {})
+                const title = document.createElement('h3')
+                title.textContent = `Entrances and Exits for ${this.year}-${this.month}`
+                const table = document.createElement('table')
+                let monthlyTime = new Date(0)
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Daily Time</th>
+                            <th>Events</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${Object.entries(groupedHistory).map(([date, entries]) => {
+                            const dailyTime = history.dailyTime(new Date(date))
+                            monthlyTime = new Date(monthlyTime.getTime() + dailyTime.getTime())
+                            const hours = Math.floor(dailyTime.getTime() / (1000 * 60 * 60))
+                            const minutes = Math.floor((dailyTime.getTime() / (1000 * 60)) % 60)
+                            const formattedDailyTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`
+                            let timeEventsLog = ''
+                            for (let i = 0; i < entries.length; i++) {
+                                const postfix = entries[i].type === 'enter' ? '➡️' : '🕓'
+                                timeEventsLog += `${entries[i].time.toLocaleTimeString(undefined, { hour12: false, hour: '2-digit', minute: '2-digit' })}${postfix}`
+                            }
+                            if (timeEventsLog.endsWith('🕓')) {
+                                timeEventsLog = timeEventsLog.slice(0, -2)
+                            }
+                            const dayOfMonths = (new Date(date)).getDate()
+                            return `
+                                <tr>
+                                    <td>${dayOfMonths}</td>
+                                    <td>${formattedDailyTime}</td>
+                                    <td>${timeEventsLog}</td>
+                                </tr>
+                            `
+                        }).join('')}
+                        <tr>
+                            <td>Total</td>
+                            <td>${Math.floor(monthlyTime.getTime() / (1000 * 60 * 60))}h ${Math.floor((monthlyTime.getTime() / (1000 * 60)) % 60)}m</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                `
+                const downloadButton = this.createDownloadButton(history.array)
 
-            this.historyLog.innerHTML = ''
-            this.historyLog.appendChild(title)
-            this.historyLog.appendChild(table)
-            this.historyLog.appendChild(downloadButton)
-            this.historyLog.classList.add('history-log')
-            this.historyLog.style.display = 'block'
-        })
+                this.historyLog.innerHTML = ''
+                this.historyLog.appendChild(title)
+                this.historyLog.appendChild(table)
+                this.historyLog.appendChild(downloadButton)
+                this.historyLog.classList.add('history-log')
+                this.historyLog.style.display = 'block'
+            })
     }
 
     createDownloadButton(data) {

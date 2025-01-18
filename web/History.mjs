@@ -242,6 +242,25 @@ export class History {
         }
         return new Date(time)
     }
+
+    /**
+     * Fetch a History object from the API.
+     * @param {number} year - The year to fetch the history for.
+     * @param {number} month - The month to fetch the history for.
+     * @returns {Promise<History>} A promise that resolves to a History object.
+     */
+    static async fetchFromApi(year, month) {
+        if (!isClient) {
+            throw new Error('fetchFromApi is only available in the browser')
+        }
+        if (typeof year !== 'number' || typeof month !== 'number' || !Number.isInteger(year) || !Number.isInteger(month) || year < 0 || month < 1 || month > 12) {
+            throw new Error('Invalid year or month format')
+        }
+        const response = await fetch(`/api/history?year=${year}&month=${month}`)
+        const data = await response.json()
+        const date = new Date(year, month - 1)
+        return new History(date, data.history)
+    }
 }
 
 /**
