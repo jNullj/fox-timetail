@@ -21,11 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.status === 503) {
                 const history = new History()
                 history.add('enter')
+                alert('You are offline. Your entrance will be synced when you are back online.')
             }
         })
         .catch(() => {
             const history = new History()
             history.add('enter')
+            alert('You are offline. Your entrance will be synced when you are back online.')
         })
     })
     exitButton.addEventListener('click', () => {
@@ -34,11 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.status === 503) {
                 const history = new History()
                 history.add('exit')
+                alert('You are offline. Your exit will be synced when you are back online.')
             }
         })
         .catch(() => {
             const history = new History()
             history.add('exit')
+            alert('You are offline. Your exit will be synced when you are back online.')
         })
     })
     historyButton.addEventListener('click', () => {
