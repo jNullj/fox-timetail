@@ -266,20 +266,27 @@ export class History {
                 headers['If-None-Match'] = etag
             }
         }
-        const response = await fetch(`/api/history?year=${year}&month=${month}`, { headers })
-        if (response.status === 204) {
+        try {
+            const response = await fetch(`/api/history?year=${year}&month=${month}`, { headers })
+            if (response.status === 204) {
+                return new History(date, [])
+            }
+            if (response.status === 304) {
+                return new History(date, cachedData)
+            }
+            const data = await response.json()
+            const etag = response.headers.get('ETag')
+            if (etag) {
+                localStorage.setItem(`etag-${yearMonth}`, etag)
+            }
+            localStorage.setItem(`history-${yearMonth}`, JSON.stringify(data.history))
+            return new History(date, data.history)
+        } catch (error) {
+            if (cachedData) {
+                return new History(date, cachedData)
+            }
             return new History(date, [])
         }
-        if (response.status === 304) {
-            return new History(date, cachedData)
-        }
-        const data = await response.json()
-        const etag = response.headers.get('ETag')
-        if (etag) {
-            localStorage.setItem(`etag-${yearMonth}`, etag)
-        }
-        localStorage.setItem(`history-${yearMonth}`, JSON.stringify(data.history))
-        return new History(date, data.history)
     }
 }
 
