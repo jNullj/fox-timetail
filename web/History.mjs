@@ -257,6 +257,9 @@ export class History {
             throw new Error('Invalid year or month format')
         }
         const response = await fetch(`/api/history?year=${year}&month=${month}`)
+        if (response.status === 204) {
+            return new History(new Date(year, month - 1), [])
+        }
         const data = await response.json()
         const date = new Date(year, month - 1)
         return new History(date, data.history)
