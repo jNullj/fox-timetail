@@ -4,6 +4,7 @@ import fs from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import { History, HistoryItem } from './History.mjs'
+import crypto from 'crypto'
 
 const app = express()
 app.use(bodyParser.json()) // for parsing application/json
@@ -159,23 +160,32 @@ app.get('/api/sessionTime', (req, res) => {
     res.send({ sessionTime, isAtWork })
 })
 
+function sendHistoryWithETag(res, historyArray, req) {
+    const historyData = JSON.stringify(historyArray)
+    const etag = crypto.createHash('md5').update(historyData).digest('hex')
+    if (req.headers['if-none-match'] === etag) {
+        return res.sendStatus(304)
+    }
+    res.setHeader('ETag', etag)
+    return res.send({ history: historyArray })
+}
+
 app.get('/api/history', (req, res) => {
     if (req.query.year && req.query.month) {
         req.query.year = parseInt(req.query.year)
         req.query.month = parseInt(req.query.month)
         const date = new Date(req.query.year, req.query.month - 1)
         if (history.isDateLoaded(date)) {
-            // avoid the file load, its already loaded
-            return res.send({ history: history.array })
+            return sendHistoryWithETag(res, history.array, req)
         }
         const oldHistory = new History(date)
-        return res.send({ history: oldHistory.array })
+        return sendHistoryWithETag(res, oldHistory.array, req)
     } else if (req.query.year) {
         return res.status(400).send('Missing month parameter')
     } else if (req.query.month) {
         return res.status(400).send('Missing year parameter')
     } else {
-        return res.send({ history: history.array })
+        return sendHistoryWithETag(res, history.array, req)
     }
 })
 
