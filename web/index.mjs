@@ -176,15 +176,24 @@ app.get('/api/history', (req, res) => {
         req.query.month = parseInt(req.query.month)
         const date = new Date(req.query.year, req.query.month - 1)
         if (history.isDateLoaded(date)) {
+            if (history.isEmpty) {
+                return res.status(204).send('No Content')
+            }
             return sendHistoryWithETag(res, history.array, req)
         }
         const oldHistory = new History(date)
+        if (oldHistory.isEmpty) {
+            return res.status(204).send('No Content')
+        }
         return sendHistoryWithETag(res, oldHistory.array, req)
     } else if (req.query.year) {
         return res.status(400).send('Missing month parameter')
     } else if (req.query.month) {
         return res.status(400).send('Missing year parameter')
     } else {
+        if (history.isEmpty) {
+            return res.status(204).send('No Content')
+        }
         return sendHistoryWithETag(res, history.array, req)
     }
 })
