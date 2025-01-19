@@ -23,9 +23,10 @@ features:
 - [x] webapp for mobile and desktop
 - [ ] offline mode - WIP
     - [x] store requests and send them when online
-    - [ ] store data locally
-    - [ ] display status when offline
+    - [x] store data locally
+    - [x] display status when offline
     - [ ] display connection status indication
+    - [ ] indicate when the data is not synced
 - [ ] export formats:
     - [ ] csv
     - [ ] pdf
