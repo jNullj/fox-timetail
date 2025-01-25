@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const historyModal = new HistoryModal(document.body)
 
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/serviceWorker.js')
+        navigator.serviceWorker.register('service-worker/serviceWorker.js')
     }
 
     entranceButton.addEventListener('click', () => {

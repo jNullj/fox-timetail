@@ -22,17 +22,11 @@ if (!fs.existsSync(__dirname + '/db')) {
 let history = new History()
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/home.html')
+    res.sendFile(__dirname + '/client/home.html')
 })
-app.use('/home.html', express.static(__dirname + '/home.html'))
-app.use('/css/home.css', express.static(__dirname + '/home.css'))
-app.use('/js/home.js', express.static(__dirname + '/home.js'))
-app.use('/js/historyModal.mjs', express.static(__dirname + '/historyModal.mjs'))
+
+app.use('/', express.static(__dirname + '/client'))
 app.use('/js/History.mjs', express.static(__dirname + '/History.mjs'))
-app.use('/js/modal.mjs', express.static(__dirname + '/modal.mjs'))
-app.use('/icons', express.static(__dirname + '/icons'))
-app.use('/manifest.json', express.static(__dirname + '/manifest.json'))
-app.use('/serviceWorker.js', express.static(__dirname + '/serviceWorker.js'))
 
 function handleEvent(req, res, eventType) {
     // override time with the time sent in the request (for sync), or use the current time
