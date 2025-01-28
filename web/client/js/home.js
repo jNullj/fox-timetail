@@ -56,14 +56,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const month = now.getMonth() + 1
         History.fetchFromApi(year, month)
             .then(history => {
-                const sessionTime = history.dailyTime(now).getTime()
-                const hours = Math.floor(sessionTime / (1000 * 60 * 60))
-                const minutes = Math.floor((sessionTime / (1000 * 60)) % 60)
-                const seconds = Math.floor((sessionTime / 1000) % 60)
-                const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-                currentTime.innerText = formattedTime
-                dayPercentage.innerText = Math.floor((sessionTime / workdayMs) * 100) + '%'
-                statusIcon.className = history.isAtWork() ? 'active' : 'inactive'
+                updateTimeUI(history)
             })
     }, 1000)
+
+    function updateTimeUI(history) {
+        const now = new Date()
+        const sessionTime = history.dailyTime(now).getTime()
+        const hours = Math.floor(sessionTime / (1000 * 60 * 60))
+        const minutes = Math.floor((sessionTime / (1000 * 60)) % 60)
+        const seconds = Math.floor((sessionTime / 1000) % 60)
+        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+        currentTime.innerText = formattedTime
+        dayPercentage.innerText = Math.floor((sessionTime / workdayMs) * 100) + '%'
+        statusIcon.className = history.isAtWork() ? 'active' : 'inactive'
+    }
 })
