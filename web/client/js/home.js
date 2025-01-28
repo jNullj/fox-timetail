@@ -56,16 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
         historyModal.show()
     })
 
+    // Fetch history from API once when the page is loaded
+    fetchHistoryFromApi()
+
     // Fetch history from API and update cache every 10 seconds
-    setInterval(() => {
-        const now = new Date()
-        const year = now.getFullYear()
-        const month = now.getMonth() + 1
-        History.fetchFromApi(year, month)
-            .then(history => {
-                cachedHistory = history
-            })
-    }, 10000)
+    setInterval(fetchHistoryFromApi, 10000)
 
     // Update the current session time every second using cached history
     setInterval(() => {
@@ -73,6 +68,19 @@ document.addEventListener('DOMContentLoaded', () => {
             updateTimeUI(cachedHistory)
         }
     }, 1000)
+
+    function fetchHistoryFromApi() {
+        const now = new Date()
+        const year = now.getFullYear()
+        const month = now.getMonth() + 1
+        History.fetchFromApi(year, month)
+            .then(history => {
+                cachedHistory = history
+            })
+            .catch(error => {
+                console.error('Failed to fetch history:', error)
+            })
+    }
 
     function updateTimeUI(history) {
         const now = new Date()
