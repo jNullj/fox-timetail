@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const historyButton = document.getElementById('historyButton')
     const workdayMs = 1000 * 60 * 60 * 9  // 9 hours in milliseconds
     const historyModal = new HistoryModal(document.body)
+    let cachedHistory = null
 
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('service-worker/serviceWorker.js')
@@ -49,15 +50,22 @@ document.addEventListener('DOMContentLoaded', () => {
         historyModal.show()
     })
 
-    // update the current session time every second
+    // Fetch history from API and update cache every 10 seconds
     setInterval(() => {
         const now = new Date()
         const year = now.getFullYear()
         const month = now.getMonth() + 1
         History.fetchFromApi(year, month)
             .then(history => {
-                updateTimeUI(history)
+                cachedHistory = history
             })
+    }, 10000)
+
+    // Update the current session time every second using cached history
+    setInterval(() => {
+        if (cachedHistory) {
+            updateTimeUI(cachedHistory)
+        }
     }, 1000)
 
     function updateTimeUI(history) {
