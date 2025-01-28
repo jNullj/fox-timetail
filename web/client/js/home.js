@@ -11,6 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const workdayMs = 1000 * 60 * 60 * 9  // 9 hours in milliseconds
     const historyModal = new HistoryModal(document.body)
     let cachedHistory = null
+    try {
+        const history = new History()
+        cachedHistory = history
+    } catch (error) {
+        console.error('Failed to load history at startup:', error)
+    }
 
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('service-worker/serviceWorker.js')
