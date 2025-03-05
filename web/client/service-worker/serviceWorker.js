@@ -98,10 +98,10 @@ self.addEventListener('sync', event => {
             let store = tx.objectStore('apiPendingRequestsStore')
             let req = store.openCursor()
             req.onsuccess = async function() {
-                const curser = req.result
-                if (!curser) { return }
-                const key = curser.key
-                const pendingRequest = curser.value
+                const cursor = req.result
+                if (!cursor) { return }
+                const key = cursor.key
+                const pendingRequest = cursor.value
                 fetch(pendingRequest.path, { method: 'POST', body: JSON.stringify({ time: pendingRequest.time }), headers: { 'Content-Type': 'application/json' }})
                 .then(res => {
                     if (res.ok) {
@@ -110,7 +110,7 @@ self.addEventListener('sync', event => {
                         .delete(key)
                     }
                 })
-                curser.continue()
+                cursor.continue()
             }
         }
 
