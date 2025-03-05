@@ -65,7 +65,7 @@ self.addEventListener('fetch', event => {
                     let db = event.target.result
                     let tx = db.transaction('apiPendingRequestsStore', 'readwrite')
                     let store = tx.objectStore('apiPendingRequestsStore')
-                    let req = store.add({path: url.pathname, time: new Date()})
+                    let req = store.add({path: url.pathname, body: event.request.body, time: new Date()})
                     req.onsuccess = function() {
                         self.registration.sync.register('syncPendingApiRequests')
                     }
@@ -102,7 +102,7 @@ self.addEventListener('sync', event => {
                 if (!cursor) { return }
                 const key = cursor.key
                 const pendingRequest = cursor.value
-                fetch(pendingRequest.path, { method: 'POST', body: JSON.stringify({ time: pendingRequest.time }), headers: { 'Content-Type': 'application/json' }})
+                fetch(pendingRequest.path, { method: 'POST', body: JSON.stringify(pendingRequest.body), headers: { 'Content-Type': 'application/json' }})
                 .then(res => {
                     if (res.ok) {
                         db.transaction('apiPendingRequestsStore', 'readwrite')
