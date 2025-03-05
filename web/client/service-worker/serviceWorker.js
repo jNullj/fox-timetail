@@ -14,6 +14,7 @@ const filesToCache = [
 const callsToSync = [
     '/api/enter',
     '/api/exit',
+    '/api/config'
 ]
 
 // The install event is triggered when the service worker is first installed.
