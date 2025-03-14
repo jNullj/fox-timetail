@@ -42,7 +42,15 @@ export class UserConfig {
                 }
             }
         } else {
-            this.config = JSON.parse(fs.readFileSync(__dirname + '/db/' + UserConfig.BASE_FILE_NAME, 'utf8'))
+            try {
+                this.config = JSON.parse(fs.readFileSync(__dirname + '/db/' + UserConfig.BASE_FILE_NAME, 'utf8'))
+            } catch (error) {
+                if (error.code === 'ENOENT') {
+                    console.warn('Config file not found, using default configuration')
+                } else {
+                    throw error
+                }
+            }
         }
     }
 
