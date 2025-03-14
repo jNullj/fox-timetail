@@ -51,7 +51,7 @@ self.addEventListener('fetch', event => {
                 return response
             }
             const url = new URL(event.request.url)
-            if (!callsToSync.includes(url.pathname)) {
+            if (event.request.method === 'GET' || !callsToSync.includes(url.pathname)) {
                 return fetch(event.request).catch(() => {
                     return new Response('You are offline', {
                         status: 503, statusText: 'Service Unavailable'
