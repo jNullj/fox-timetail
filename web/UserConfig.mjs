@@ -42,7 +42,7 @@ export class UserConfig {
                 }
             }
         } else {
-            this.config = JSON.parse(fs.readFileSync(__dirname + '/' + UserConfig.BASE_FILE_NAME, 'utf8'))
+            this.config = JSON.parse(fs.readFileSync(__dirname + '/db/' + UserConfig.BASE_FILE_NAME, 'utf8'))
         }
     }
 
@@ -57,7 +57,7 @@ export class UserConfig {
             })
             localStorage.setItem(UserConfig.BASE_FILE_NAME, JSON.stringify(this.config))
         } else {
-            fs.writeFileSync(__dirname + '/' + UserConfig.BASE_FILE_NAME, JSON.stringify(this.config, null, 4))
+            fs.writeFileSync(__dirname + '/db/' + UserConfig.BASE_FILE_NAME, JSON.stringify(this.config, null, 4))
         }
     }
 }
