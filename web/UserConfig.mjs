@@ -27,8 +27,20 @@ export class UserConfig {
 
     async load() {
         if (isClient) {
-            const response = await fetch(UserConfig.API_ENDPOINT)
-            this.config = await response.json()
+            try {
+                const response = await fetch(UserConfig.API_ENDPOINT)
+                if (!response.ok) throw new Error('Network response was not ok')
+                this.config = await response.json()
+                localStorage.setItem(UserConfig.BASE_FILE_NAME, JSON.stringify(this.config))
+            } catch (error) {
+                if (error.message !== 'Network response was not ok') { throw error }
+                const cachedData = localStorage.getItem(UserConfig.BASE_FILE_NAME)
+                if (cachedData) {
+                    this.config = JSON.parse(cachedData)
+                } else {
+                    throw new Error('no data available')
+                }
+            }
         } else {
             this.config = JSON.parse(fs.readFileSync(__dirname + '/' + UserConfig.BASE_FILE_NAME, 'utf8'))
         }
@@ -43,6 +55,7 @@ export class UserConfig {
                 },
                 body: JSON.stringify(this.config)
             })
+            localStorage.setItem(UserConfig.BASE_FILE_NAME, JSON.stringify(this.config))
         } else {
             fs.writeFileSync(__dirname + '/' + UserConfig.BASE_FILE_NAME, JSON.stringify(this.config, null, 4))
         }
