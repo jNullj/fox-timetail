@@ -1,4 +1,5 @@
 import { HistoryModal } from "./historyModal.mjs"
+import { SettingsModal } from "./settingsModal.mjs"
 import { History } from "./History.mjs"
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,8 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentTime = document.getElementById('currentTime')
     const dayPercentage = document.getElementById('dayPercentage')
     const historyButton = document.getElementById('historyButton')
+    const settingsButton = document.getElementById('settingsButton')
     const workdayMs = 1000 * 60 * 60 * 9  // 9 hours in milliseconds
     const historyModal = new HistoryModal(document.body)
+    const settingsModal = new SettingsModal(document.body)
     let cachedHistory = null
     try {
         const history = new History()
@@ -54,6 +57,14 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     historyButton.addEventListener('click', () => {
         historyModal.show()
+    })
+
+    settingsModal.addButton('icons/user-config.svg', 'User Config', () => {
+        // TODO
+        alert('User Config button clicked TODO')
+    })
+    settingsButton.addEventListener('click', () => {
+        settingsModal.show()
     })
 
     // Fetch history from API once when the page is loaded

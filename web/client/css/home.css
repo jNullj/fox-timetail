@@ -94,7 +94,6 @@ footer #statusIcon.active {
     overflow: auto;
     background-color: rgb(0, 70, 150);
 }
-  
 .modal-content {
     background-color: rgb(0, 56, 121);
     margin: auto;
@@ -102,12 +101,15 @@ footer #statusIcon.active {
     border: 1px solid black;
     width: 80%;
     height: 80%;
+    max-width: 100vw;
+    max-height: 100vh;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: auto;
 }
-  
 .closeButton {
     color: white;
     font-size: 2em;
@@ -142,9 +144,21 @@ footer #statusIcon.active {
     text-align: center;
     border: 1px solid black;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 1.5em;
+}
+
+.grid-item img {
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+}
+
+.grid-item span {
+    margin-top: 10px;
+    font-size: 1rem;
 }
   
 .selected-grid-item {
@@ -156,4 +170,28 @@ footer #statusIcon.active {
     color: white;
     text-shadow: 1px 1px 2px black, 0 0 1em black, 0 0 0.2em black;
     overflow-y: scroll;
+}
+
+.settings-flexbox {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    align-content: flex-start;
+    overflow: auto;
+}
+
+.settings-flexbox .grid-item {
+    flex: 1 1 calc(33.333% - 20px); /* 3 per row, minus gap */
+    max-width: calc(33.333% - 20px);
+    box-sizing: border-box;
+    margin: 10px 0 0 10px;
+    height: calc(33.333% - 20px); /* up to 3 rows */
+    max-height: calc(33.333% - 20px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
