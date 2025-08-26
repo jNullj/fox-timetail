@@ -31,7 +31,8 @@ features:
     - [ ] csv
     - [ ] pdf
     - [x] json (per month)
-- [ ] import fromats: TBD
+- [ ] import formats:
+    - [ ] json (per month)
 - [ ] multi-user support:
     - [ ] login
     - [ ] per user settings
