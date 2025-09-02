@@ -48,6 +48,7 @@ export class History {
             item = new HistoryItem(item)
         }
         if (this.loadedFile !== getCurrentYearMonth()) {
+            // TODO: add support for adding to previous months
             console.log('Started a new month. Loading new history file...')
             this.loadFromFile()
         }
@@ -72,7 +73,7 @@ export class History {
      * @returns {void}
      */
     saveToFile() {
-        const yearMonth = getCurrentYearMonth()
+        const yearMonth = this.loadedFile || getCurrentYearMonth()
         const data = this.serialize()
         if (isClient) {
             localStorage.setItem(`history-${yearMonth}`, data)
