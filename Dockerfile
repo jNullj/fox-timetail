@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY web/package*.json ./
 
-RUN npm install
+ENV NODE_ENV=production
+RUN npm ci --omit=dev
 
 COPY web/ .
 
