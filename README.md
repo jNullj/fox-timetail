@@ -32,7 +32,7 @@ features:
     - [ ] pdf
     - [x] json (per month)
 - [ ] import formats:
-    - [ ] json (per month)
+    - [x] json (per month)
 - [ ] multi-user support:
     - [ ] login
     - [ ] per user settings
