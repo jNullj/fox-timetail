@@ -19,9 +19,9 @@ features:
     - [ ] set balance
     - [ ] set the gain per month
     - [ ] display balance
-    - [ ] add sick days to db
+    - [x] add sick days to db
     - [ ] add vacation days to db
-    - [ ] display sick days at month view
+    - [x] display sick days at month view
     - [ ] display vacation days at month view
 - [ ] add notes
 - [x] webapp for mobile and desktop

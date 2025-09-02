@@ -93,7 +93,7 @@ export class HistoryModal extends Modal {
                     return acc
                 }, {})
                 const title = document.createElement('h3')
-                title.textContent = `Entrances and Exits for ${this.year}-${this.month}`
+                title.textContent = `Events for ${this.year}-${this.month}`
                 const table = document.createElement('table')
                 let monthlyTime = new Date(0)
                 table.innerHTML = `
@@ -113,11 +113,19 @@ export class HistoryModal extends Modal {
                             const formattedDailyTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`
                             let timeEventsLog = ''
                             for (let i = 0; i < entries.length; i++) {
-                                const postfix = entries[i].type === 'enter' ? '➡️' : '🕓'
-                                timeEventsLog += `${entries[i].time.toLocaleTimeString(undefined, { hour12: false, hour: '2-digit', minute: '2-digit' })}${postfix}`
-                            }
-                            if (timeEventsLog.endsWith('🕓')) {
-                                timeEventsLog = timeEventsLog.slice(0, -2)
+                                const entry = entries[i]
+                                const entryTimeStr = entry.time.toLocaleTimeString(undefined, { hour12: false, hour: '2-digit', minute: '2-digit' })
+                                let iconPostfix = ''
+                                if (entry.type === 'sick') {
+                                    iconPostfix = '😷'
+                                } else if (entry.type === 'enter') {
+                                    iconPostfix = '➡️'
+                                } else if (entry.type === 'exit') {
+                                    iconPostfix = '🕓'
+                                } else {
+                                    iconPostfix = '❓'
+                                }
+                                timeEventsLog += `${entryTimeStr}${iconPostfix}`
                             }
                             const dayOfMonths = (new Date(date)).getDate()
                             return `

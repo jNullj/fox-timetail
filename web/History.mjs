@@ -41,7 +41,7 @@ export class History {
      */
     add(item) {
         if (item instanceof HistoryItem === false &&
-            item !== 'enter' && item !== 'exit') {
+            item !== 'enter' && item !== 'exit' && item !== 'sick') {
             throw new Error('Item must be a HistoryItem or a fitting string')
         }
         if (typeof item === 'string') {
@@ -303,13 +303,13 @@ export class History {
 export class HistoryItem {
     /**
      * Create a new HistoryItem.
-     * @param {'enter'|'exit'} type - The type of event that occurred.
+     * @param {'enter'|'exit'|'sick'} type - The type of event that occurred.
      * @param {Date} time - The time the event occurred - optional, defaults to current time.
      */
     constructor(type, time) {
         this.time = time || new Date()
-        if (type !== 'enter' && type !== 'exit') {
-            throw new Error('Type must be "enter" or "exit"')
+        if (type !== 'enter' && type !== 'exit' && type !== 'sick') {
+            throw new Error('Type must be "enter", "exit", or "sick"')
         }
         this.type = type
     }
