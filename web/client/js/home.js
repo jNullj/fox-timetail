@@ -30,6 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 history.add('enter')
                 alert('You are offline. Your entrance will be synced when you are back online.')
             }
+            if (response.status === 200) {
+                // Improve UX by immediately updating the UI and cached history
+                fetchHistoryFromApi()
+                fetchHistoryInterval.refresh()
+            }
         })
         .catch(() => {
             const history = new History()
@@ -44,6 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const history = new History()
                 history.add('exit')
                 alert('You are offline. Your exit will be synced when you are back online.')
+            }
+            if (response.status === 200) {
+                // Improve UX by immediately updating the UI and cached history
+                fetchHistoryFromApi()
+                fetchHistoryInterval.refresh()
             }
         })
         .catch(() => {
@@ -60,7 +70,17 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchHistoryFromApi()
 
     // Fetch history from API and update cache every 10 seconds
-    setInterval(fetchHistoryFromApi, 10000)
+    const fetchHistoryInterval = (function() {
+        let id = setInterval(fetchHistoryFromApi, 10000)
+        return {
+            refresh() {
+                if (id) {
+                    clearInterval(id)
+                }
+                id = setInterval(fetchHistoryFromApi, 10000)
+            }
+        }
+    })()
 
     // Update the current session time every second using cached history
     setInterval(() => {
