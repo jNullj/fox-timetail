@@ -25,36 +25,34 @@ document.addEventListener('DOMContentLoaded', () => {
         navigator.serviceWorker.register('service-worker/serviceWorker.js')
     }
 
-    entranceButton.addEventListener('click', () => {
-        fetch('/api/enter', { method: 'POST' })
+    // Helper to send presence updates (enter/exit) and handle offline fallback
+    function sendPresenceUpdate(statusLabel) {
+        const pathMap = {
+            'enter': '/api/enter',
+            'exit': '/api/exit'
+        }
+        fetch(pathMap[statusLabel], { method: 'POST' })
         .then(response => {
             if (response.status === 503) {
                 const history = new History()
-                history.add('enter')
-                alert('You are offline. Your entrance will be synced when you are back online.')
+                history.add(statusLabel)
+                alert(`You are offline. Your ${statusLabel} will be synced when you are back online.`)
+            }
+            if (response.status === 200) {
+                // Improve UX by immediately updating the UI and cached history
+                fetchHistoryFromApi()
+                fetchHistoryInterval.refresh()
             }
         })
         .catch(() => {
             const history = new History()
-            history.add('enter')
-            alert('You are offline. Your entrance will be synced when you are back online.')
+            history.add(statusLabel)
+            alert(`You are offline. Your ${statusLabel} will be synced when you are back online.`)
         })
-    })
-    exitButton.addEventListener('click', () => {
-        fetch('/api/exit', { method: 'POST' })
-        .then(response => {
-            if (response.status === 503) {
-                const history = new History()
-                history.add('exit')
-                alert('You are offline. Your exit will be synced when you are back online.')
-            }
-        })
-        .catch(() => {
-            const history = new History()
-            history.add('exit')
-            alert('You are offline. Your exit will be synced when you are back online.')
-        })
-    })
+    }
+
+    entranceButton.addEventListener('click', () => sendPresenceUpdate('enter'))
+    exitButton.addEventListener('click', () => sendPresenceUpdate('exit'))
     historyButton.addEventListener('click', () => {
         historyModal.show()
     })
@@ -71,7 +69,17 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchHistoryFromApi()
 
     // Fetch history from API and update cache every 10 seconds
-    setInterval(fetchHistoryFromApi, 10000)
+    const fetchHistoryInterval = (function() {
+        let id = setInterval(fetchHistoryFromApi, 10000)
+        return {
+            refresh() {
+                if (id) {
+                    clearInterval(id)
+                }
+                id = setInterval(fetchHistoryFromApi, 10000)
+            }
+        }
+    })()
 
     // Update the current session time every second using cached history
     setInterval(() => {

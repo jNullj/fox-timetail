@@ -1,15 +1,20 @@
-FROM node:23-alpine
+FROM node:25.2.1-alpine
 
 WORKDIR /app
 
 COPY web/package*.json ./
 
-RUN npm install
+ENV NODE_ENV=production
+RUN npm ci --omit=dev
 
 COPY web/ .
 
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN mkdir -p /app/db && chown appuser:appgroup /app/db
 VOLUME /app/db
 
 EXPOSE 8097
+
+USER appuser
 
 CMD [ "npm", "run", "start" ]

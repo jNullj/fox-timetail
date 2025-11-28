@@ -93,7 +93,7 @@ export class HistoryModal extends Modal {
                     return acc
                 }, {})
                 const title = document.createElement('h3')
-                title.textContent = `Entrances and Exits for ${this.year}-${this.month}`
+                title.textContent = `Events for ${this.year}-${this.month}`
                 const table = document.createElement('table')
                 let monthlyTime = new Date(0)
                 table.innerHTML = `
@@ -113,11 +113,19 @@ export class HistoryModal extends Modal {
                             const formattedDailyTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`
                             let timeEventsLog = ''
                             for (let i = 0; i < entries.length; i++) {
-                                const postfix = entries[i].type === 'enter' ? '➡️' : '🕓'
-                                timeEventsLog += `${entries[i].time.toLocaleTimeString(undefined, { hour12: false, hour: '2-digit', minute: '2-digit' })}${postfix}`
-                            }
-                            if (timeEventsLog.endsWith('🕓')) {
-                                timeEventsLog = timeEventsLog.slice(0, -2)
+                                const entry = entries[i]
+                                const entryTimeStr = entry.time.toLocaleTimeString(undefined, { hour12: false, hour: '2-digit', minute: '2-digit' })
+                                let iconPostfix = ''
+                                if (entry.type === 'sick') {
+                                    iconPostfix = '😷'
+                                } else if (entry.type === 'enter') {
+                                    iconPostfix = '➡️'
+                                } else if (entry.type === 'exit') {
+                                    iconPostfix = '🕓'
+                                } else {
+                                    iconPostfix = '❓'
+                                }
+                                timeEventsLog += `${entryTimeStr}${iconPostfix}`
                             }
                             const dayOfMonths = (new Date(date)).getDate()
                             return `
@@ -136,14 +144,58 @@ export class HistoryModal extends Modal {
                     </tbody>
                 `
                 const downloadButton = this.createDownloadButton(history.array)
+                const uploadButton = this.createUploadButton()
 
                 this.historyLog.innerHTML = ''
                 this.historyLog.appendChild(title)
                 this.historyLog.appendChild(table)
                 this.historyLog.appendChild(downloadButton)
+                this.historyLog.appendChild(uploadButton)
                 this.historyLog.classList.add('history-log')
                 this.historyLog.style.display = 'block'
             })
+    }
+
+    createUploadButton() {
+        const uploadButton = document.createElement('button')
+        uploadButton.textContent = 'Upload JSON'
+
+        uploadButton.addEventListener('click', () => {
+            const fileInput = document.createElement('input')
+            fileInput.type = 'file'
+            fileInput.accept = 'application/json'
+            fileInput.style.display = 'none'
+            fileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0]
+                if (!file) return
+                const reader = new FileReader()
+                reader.onload = (e) => {
+                    try {
+                        const json = JSON.parse(e.target.result)
+                        fetch('/api/importMonth', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ year: this.year, month: this.month, data: json })
+                        })
+                        .then(response => response.text())
+                        .then(msg => {
+                            alert(msg)
+                            this.showHistoryData() // refresh after import
+                        })
+                        .catch(err => {
+                            alert('Failed to import history: ' + err)
+                        })
+                    } catch (err) {
+                        alert('Invalid JSON file')
+                    }
+                }
+                reader.readAsText(file)
+            })
+            // Trigger file dialog
+            fileInput.click()
+        })
+
+        return uploadButton
     }
 
     createDownloadButton(data) {

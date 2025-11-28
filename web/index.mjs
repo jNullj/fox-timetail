@@ -136,6 +136,55 @@ app.get('/api/history', (req, res) => {
     }
 })
 
+// Endpoint to import a month's history using a JSON object
+app.post('/api/importMonth', (req, res) => {
+    const { year, month, data } = req.body
+
+    if (!year || !month || !data) {
+        return res.status(400).send('Year, month, and data are required')
+    }
+
+    const yearInt = parseInt(year)
+    const monthInt = parseInt(month)
+
+    if (!Number.isInteger(yearInt) || !Number.isInteger(monthInt) || yearInt < 0 || monthInt < 1 || monthInt > 12) {
+        return res.status(400).send('Invalid year or month')
+    }
+
+    try {
+        if (!Array.isArray(data)) {
+            return res.status(400).send('Invalid data format: Expected an array of history items')
+        }
+
+        // Use the existing history instance if the month matches
+        const importDate = new Date(yearInt, monthInt - 1)
+        let targetHistory
+        if (history.isDateLoaded(importDate)) {
+            targetHistory = history
+        } else {
+            targetHistory = new History(importDate)
+        }
+
+        // Compare arrays by stringifying (order matters) - optimize to avoid write when identical
+        const importedString = JSON.stringify(data)
+        const currentString = JSON.stringify(targetHistory.array.map(item => ({ type: item.type, time: item.time.toISOString() })))
+
+        // If different, overwrite
+        if (importedString !== currentString) {
+            targetHistory.deserialize(data)
+            targetHistory.saveToFile()
+            console.log(`History imported successfully for ${yearInt}-${monthInt}`)
+            console.log(`array: ${JSON.stringify(targetHistory.array)}`)
+            return res.status(200).send('History imported and overwritten')
+        } else {
+            return res.status(200).send('Imported history is identical to current, no changes made')
+        }
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send('An error occurred while processing the data')
+    }
+})
+
 app.get('/api/config', async (req, res) => {
     try {
         await userConfig.load()

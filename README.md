@@ -19,6 +19,10 @@ features:
     - [ ] set balance
     - [ ] set the gain per month
     - [ ] display balance
+    - [x] add sick days to db
+    - [ ] add vacation days to db
+    - [x] display sick days at month view
+    - [ ] display vacation days at month view
 - [ ] add notes
 - [x] webapp for mobile and desktop
 - [ ] offline mode - WIP
@@ -31,7 +35,8 @@ features:
     - [ ] csv
     - [ ] pdf
     - [x] json (per month)
-- [ ] import fromats: TBD
+- [ ] import formats:
+    - [x] json (per month)
 - [ ] multi-user support:
     - [ ] login
     - [ ] per user settings
