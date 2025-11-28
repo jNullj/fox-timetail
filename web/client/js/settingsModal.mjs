@@ -17,7 +17,6 @@ export class SettingsModal extends Modal {
         button.className = 'grid-item'
         button.innerHTML = `
             <img src="${icon}" alt="${text}">
-            <br>
             <span>${text}</span>
         `
         button.addEventListener('click', onClick)

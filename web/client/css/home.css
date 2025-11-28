@@ -152,8 +152,8 @@ footer #statusIcon.active {
 
 .grid-item img {
     margin: 0 auto;
-    width: 100%;
-    height: 100%;
+    width: calc(100% - 1px - 10px); /* full width - border - padding */
+    height: calc(100% - 10px - 1rem - 10px - 1px); /* full height - padding - label - label-padding - border */
 }
 
 .grid-item span {
