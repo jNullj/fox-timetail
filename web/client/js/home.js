@@ -1,3 +1,4 @@
+import { userConfigModal } from "./userConfigModal.mjs"
 import { HistoryModal } from "./historyModal.mjs"
 import { SettingsModal } from "./settingsModal.mjs"
 import { History } from "./History.mjs"
@@ -58,8 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     settingsModal.addButton('icons/user-config.svg', 'User Config', () => {
-        // TODO
-        alert('User Config button clicked TODO')
+        const userConfig = new userConfigModal(document.body)
+        userConfig.show()
     })
     settingsButton.addEventListener('click', () => {
         settingsModal.show()

@@ -30,6 +30,7 @@ app.get('/', (req, res) => {
 
 app.use('/', express.static(__dirname + '/client'))
 app.use('/js/History.mjs', express.static(__dirname + '/History.mjs'))
+app.use('/js/UserConfig.mjs', express.static(__dirname + '/UserConfig.mjs'))
 
 function handleEvent(req, res, eventType) {
     // override time with the time sent in the request (for sync), or use the current time
