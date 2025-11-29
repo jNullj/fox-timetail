@@ -10,6 +10,9 @@ const filesToCache = [
     '/js/modal.mjs',
     '/js/historyModal.mjs',
     '/js/History.mjs',
+    '/js/settingsModal.mjs',
+    '/js/userConfigModal.mjs',
+    '/js/UserConfig.mjs'
 ]
 const callsToSync = [
     '/api/enter',
