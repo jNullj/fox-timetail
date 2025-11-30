@@ -258,7 +258,8 @@ export class History {
         if (!date) {
             date = new Date()
         }
-        const entries = this.array.filter(entry => entry.time.toDateString() === date.toDateString())
+        // Consider only enter/exit events for daily time calculation — ignore 'sick' events
+        const entries = this.array.filter(entry => entry.time.toDateString() === date.toDateString() && (entry.type === 'enter' || entry.type === 'exit'))
         if (entries.length === 0) {
             return new Date(0)
         }
