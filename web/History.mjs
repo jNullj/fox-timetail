@@ -143,6 +143,34 @@ export class History {
     }
 
     /**
+     * Check if a sick event exists for a particular date (compares by day).
+     * @param {Date} date - The date to check. Defaults to today.
+     * @returns {boolean} true if a sick event exists on that date.
+     */
+    hasSickDay(date) {
+        if (!date) date = new Date()
+        return this.array.some(entry => entry.type === 'sick' && entry.time.toDateString() === date.toDateString())
+    }
+
+    /**
+     * Remove all sick events for a particular date (compares by day).
+     * Saves the history file if any entries were removed.
+     * @param {Date} date - The date to remove sick events for. Defaults to today.
+     * @returns {boolean} true if any sick events were removed, false otherwise.
+     */
+    removeSickDay(date) {
+        if (!date) date = new Date()
+        const originalLength = this.array.length
+        this.array = this.array.filter(entry => !(entry.type === 'sick' && entry.time.toDateString() === date.toDateString()))
+        if (this.array.length !== originalLength) {
+            this.sortByTimeAsc()
+            this.saveToFile()
+            return true
+        }
+        return false
+    }
+
+    /**
      * Get the length of the history.
      * @returns {number} The number of events in the history.
      * @readonly
