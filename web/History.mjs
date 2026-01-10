@@ -41,7 +41,7 @@ export class History {
      */
     add(item) {
         if (item instanceof HistoryItem === false &&
-            item !== 'enter' && item !== 'exit' && item !== 'sick') {
+            item !== 'enter' && item !== 'exit' && item !== 'sick' && item !== 'vacation') {
             throw new Error('Item must be a HistoryItem or a fitting string')
         }
         if (typeof item === 'string') {
@@ -162,6 +162,34 @@ export class History {
         if (!date) date = new Date()
         const originalLength = this.array.length
         this.array = this.array.filter(entry => !(entry.type === 'sick' && entry.time.toDateString() === date.toDateString()))
+        if (this.array.length !== originalLength) {
+            this.sortByTimeAsc()
+            this.saveToFile()
+            return true
+        }
+        return false
+    }
+
+    /**
+     * Check if a vacation event exists for a particular date (compares by day).
+     * @param {Date} date - The date to check. Defaults to today.
+     * @returns {boolean} true if a vacation event exists on that date.
+     */
+    hasVacationDay(date) {
+        if (!date) date = new Date()
+        return this.array.some(entry => entry.type === 'vacation' && entry.time.toDateString() === date.toDateString())
+    }
+
+    /**
+     * Remove all vacation events for a particular date (compares by day).
+     * Saves the history file if any entries were removed.
+     * @param {Date} date - The date to remove vacation events for. Defaults to today.
+     * @returns {boolean} true if any vacation events were removed, false otherwise.
+     */
+    removeVacationDay(date) {
+        if (!date) date = new Date()
+        const originalLength = this.array.length
+        this.array = this.array.filter(entry => !(entry.type === 'vacation' && entry.time.toDateString() === date.toDateString()))
         if (this.array.length !== originalLength) {
             this.sortByTimeAsc()
             this.saveToFile()
@@ -332,13 +360,13 @@ export class History {
 export class HistoryItem {
     /**
      * Create a new HistoryItem.
-     * @param {'enter'|'exit'|'sick'} type - The type of event that occurred.
+     * @param {'enter'|'exit'|'sick'|'vacation'} type - The type of event that occurred.
      * @param {Date} time - The time the event occurred - optional, defaults to current time.
      */
     constructor(type, time) {
         this.time = time || new Date()
-        if (type !== 'enter' && type !== 'exit' && type !== 'sick') {
-            throw new Error('Type must be "enter", "exit", or "sick"')
+            if (type !== 'enter' && type !== 'exit' && type !== 'sick' && type !== 'vacation') {
+                throw new Error('Type must be "enter", "exit", "sick", or "vacation"')
         }
         this.type = type
     }
