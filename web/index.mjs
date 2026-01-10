@@ -125,10 +125,27 @@ function handleDayToggle(req, res, type) {
         }
 
         if (state) {
-            if (!hasFn(targetHistory, time)) {
-                targetHistory.add(new HistoryItem(addType, time))
+            const existing = targetHistory.getDayModifier(time)
+
+            // Identical modifier already set: ignore
+            if (existing === addType) {
+                return res.sendStatus(200)
             }
-            return res.sendStatus(200)
+
+            // No modifier set: add the requested one
+            if (!existing) {
+                targetHistory.add(new HistoryItem(addType, time))
+                return res.sendStatus(200)
+            }
+
+            // Different modifier exists: allow client to request replacement via `replace` flag
+            if (body.replace) {
+                targetHistory.removeModifier(time)
+                targetHistory.add(new HistoryItem(addType, time))
+                return res.sendStatus(200)
+            }
+
+            return res.status(409).send({ conflict: existing })
         } else {
             removeFn(targetHistory, time)
             return res.sendStatus(200)
