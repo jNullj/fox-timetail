@@ -89,6 +89,42 @@ app.post('/api/enter', (req, res) => handleEvent(req, res, 'enter'))
 
 app.post('/api/exit', (req, res) => handleEvent(req, res, 'exit'))
 
+app.post('/api/sick', (req, res) => {
+    try {
+        const body = req.body || {}
+        const state = body.state === undefined ? true : Boolean(body.state)
+        const time = body.time ? new Date(body.time) : new Date()
+
+        // If the time is invalid
+        if (isNaN(time.getTime())) {
+            return res.status(400).send('Invalid time')
+        }
+
+        // Target history: may be previous month
+        let targetHistory
+        if (history.isDateLoaded(time)) {
+            targetHistory = history
+        } else {
+            targetHistory = new History(time)
+        }
+
+        if (state) {
+            // Add sick if not already present on that day
+            if (!targetHistory.hasSickDay(time)) {
+                targetHistory.add(new HistoryItem('sick', time))
+            }
+            return res.sendStatus(200)
+        } else {
+            // Remove any sick entries for that date
+            targetHistory.removeSickDay(time)
+            return res.sendStatus(200)
+        }
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send('Failed to update sick day')
+    }
+})
+
 app.get('/api/sessionTime', (req, res) => {
     const sessionTime = history.dailyTime()
     const isAtWork = history.isAtWork()

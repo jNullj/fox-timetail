@@ -4,6 +4,7 @@ import { History } from "./History.mjs"
 document.addEventListener('DOMContentLoaded', () => {
     const entranceButton = document.getElementById('entranceButton')
     const exitButton = document.getElementById('exitButton')
+    const sickButton = document.getElementById('sickButton')
     const statusIcon = document.getElementById('statusIcon')
     const currentTime = document.getElementById('currentTime')
     const dayPercentage = document.getElementById('dayPercentage')
@@ -26,7 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function sendPresenceUpdate(statusLabel) {
         const pathMap = {
             'enter': '/api/enter',
-            'exit': '/api/exit'
+            'exit': '/api/exit',
+            'sick': '/api/sick'
         }
         fetch(pathMap[statusLabel], { method: 'POST' })
         .then(response => {
@@ -50,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     entranceButton.addEventListener('click', () => sendPresenceUpdate('enter'))
     exitButton.addEventListener('click', () => sendPresenceUpdate('exit'))
+    sickButton.addEventListener('click', () => sendPresenceUpdate('sick'))
     historyButton.addEventListener('click', () => {
         historyModal.show()
     })

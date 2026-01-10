@@ -14,6 +14,7 @@ const filesToCache = [
 const callsToSync = [
     '/api/enter',
     '/api/exit',
+    '/api/sick',
 ]
 
 // The install event is triggered when the service worker is first installed.
@@ -58,11 +59,11 @@ self.addEventListener('fetch', event => {
                 })
             }
             return fetch(event.request).catch(() => {
-                // Open a transaction to the database
+                // Open a transaction to the database and persist the request payload for later sync
                 let dbReq = indexedDB.open('apiPendingRequests', 1)
 
-                dbReq.onsuccess = function(event) {
-                    let db = event.target.result
+                dbReq.onsuccess = function(evt) {
+                    let db = evt.target.result
                     let tx = db.transaction('apiPendingRequestsStore', 'readwrite')
                     let store = tx.objectStore('apiPendingRequestsStore')
                     let req = store.add({path: url.pathname, time: new Date()})
