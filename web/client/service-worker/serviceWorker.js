@@ -1,4 +1,4 @@
-const cacheName = 'FoxTimeTail-0.5.1'
+const cacheName = 'FoxTimeTail-0.5.2'
 const filesToCache = [
     '/',
     '/js/home.js',
@@ -15,6 +15,7 @@ const callsToSync = [
     '/api/enter',
     '/api/exit',
     '/api/sick',
+    '/api/vacation',
 ]
 
 // The install event is triggered when the service worker is first installed.
