@@ -1,5 +1,8 @@
 const isClient = typeof window !== 'undefined'
 
+// Central list of day modifiers for easy extension (add new modifiers here)
+export const DAY_MODIFIERS = ['sick', 'vacation']
+
 let fs, __filename, __dirname
 
 if (!isClient) {
@@ -40,8 +43,8 @@ export class History {
      * @param {HistoryItem|'enter'|'exit'} item
      */
     add(item) {
-        if (item instanceof HistoryItem === false &&
-            item !== 'enter' && item !== 'exit' && item !== 'sick' && item !== 'vacation') {
+        const allowedStrings = ['enter', 'exit', ...DAY_MODIFIERS]
+        if (item instanceof HistoryItem === false && !allowedStrings.includes(item)) {
             throw new Error('Item must be a HistoryItem or a fitting string')
         }
         if (typeof item === 'string') {
@@ -190,6 +193,35 @@ export class History {
         if (!date) date = new Date()
         const originalLength = this.array.length
         this.array = this.array.filter(entry => !(entry.type === 'vacation' && entry.time.toDateString() === date.toDateString()))
+        if (this.array.length !== originalLength) {
+            this.sortByTimeAsc()
+            this.saveToFile()
+            return true
+        }
+        return false
+    }
+
+    /**
+     * Get the day modifier for a particular date.
+     * @param {Date} date - The date to check. Defaults to today.
+     * @returns {'sick'|'vacation'|null} the modifier type or null if none.
+     */
+    getDayModifier(date) {
+        if (!date) date = new Date()
+        const found = this.array.find(entry => DAY_MODIFIERS.includes(entry.type) && entry.time.toDateString() === date.toDateString())
+        return found ? found.type : null
+    }
+
+    /**
+     * Remove any day modifier (sick or vacation) for a particular date.
+     * Saves the history file if any entries were removed.
+     * @param {Date} date - The date to remove modifiers for. Defaults to today.
+     * @returns {boolean} true if any modifier entries were removed, false otherwise.
+     */
+    removeModifier(date) {
+        if (!date) date = new Date()
+        const originalLength = this.array.length
+        this.array = this.array.filter(entry => !( DAY_MODIFIERS.includes(entry.type) && entry.time.toDateString() === date.toDateString()))
         if (this.array.length !== originalLength) {
             this.sortByTimeAsc()
             this.saveToFile()
