@@ -2,8 +2,9 @@ import { userConfigModal } from "./userConfigModal.mjs"
 import { HistoryModal } from "./historyModal.mjs"
 import { SettingsModal } from "./settingsModal.mjs"
 import { History } from "./History.mjs"
+import { UserConfig } from "./UserConfig.mjs"
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const entranceButton = document.getElementById('entranceButton')
     const exitButton = document.getElementById('exitButton')
     const statusIcon = document.getElementById('statusIcon')
@@ -11,7 +12,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const dayPercentage = document.getElementById('dayPercentage')
     const historyButton = document.getElementById('historyButton')
     const settingsButton = document.getElementById('settingsButton')
-    const workdayMs = 1000 * 60 * 60 * 9  // 9 hours in milliseconds
+    // Load user config using the existing `UserConfig` class (uses localStorage fallback)
+    let dailyWorkHours = 9
+    const userConfig = new UserConfig()
+    try {
+        userConfig.load().then(() => {
+            dailyWorkHours = userConfig.config.dailyWorkHours || dailyWorkHours
+        })
+    } catch (err) {
+        console.warn('Could not load user config:', err)
+    }
     const historyModal = new HistoryModal(document.body)
     const settingsModal = new SettingsModal(document.body)
     let cachedHistory = null
@@ -110,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const seconds = Math.floor((sessionTime / 1000) % 60)
         const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
         currentTime.innerText = formattedTime
+        const workdayMs = dailyWorkHours * 60 * 60 * 1000
         dayPercentage.innerText = Math.floor((sessionTime / workdayMs) * 100) + '%'
         statusIcon.className = history.isAtWork() ? 'active' : 'inactive'
     }
