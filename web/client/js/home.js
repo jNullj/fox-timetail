@@ -1,5 +1,5 @@
 import { HistoryModal } from "./historyModal.mjs"
-import { History, MODIFIERS } from "./History.mjs"
+import { History, DAY_MODIFIERS } from "./History.mjs"
 
 document.addEventListener('DOMContentLoaded', () => {
     const entranceButton = document.getElementById('entranceButton')
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'vacation': '/api/vacation'
         }
         const path = pathMap[statusLabel]
-        const isModifier = MODIFIERS.includes(statusLabel)
+        const isModifier = DAY_MODIFIERS.includes(statusLabel)
         const options = opts.replace ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ replace: true }) } : { method: 'POST' }
 
         fetch(path, options)
