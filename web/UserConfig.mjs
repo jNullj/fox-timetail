@@ -54,6 +54,36 @@ export class UserConfig {
         }
     }
 
+    async loadFromCache() {
+        if (!isClient) {
+            throw new Error('loadFromCache() is client-only')
+        }
+        try {
+            const cachedData = localStorage.getItem(UserConfig.BASE_FILE_NAME)
+            if (cachedData) {
+                this.config = JSON.parse(cachedData)
+            }
+        } catch (err) {
+            console.warn('Failed to read cached user config:', err)
+        }
+    }
+        // Load configuration from local cache only (no network).
+        // On client this reads `localStorage[BASE_FILE_NAME]`.
+        // This is synchronous and throws when called on the server.
+        loadFromCache() {
+            if (!isClient) {
+                throw new Error('loadFromCache() is client-only')
+            }
+            try {
+                const cachedData = localStorage.getItem(UserConfig.BASE_FILE_NAME)
+                if (cachedData) {
+                    this.config = JSON.parse(cachedData)
+                }
+            } catch (err) {
+                console.warn('Failed to read cached user config:', err)
+            }
+        }
+
     async save() {
         if (isClient) {
             await fetch(UserConfig.API_ENDPOINT, {

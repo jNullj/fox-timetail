@@ -15,13 +15,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load user config using the existing `UserConfig` class (uses localStorage fallback)
     let dailyWorkHours = 9
     const userConfig = new UserConfig()
-    try {
-        userConfig.load().then(() => {
-            dailyWorkHours = userConfig.config.dailyWorkHours || dailyWorkHours
-        })
-    } catch (err) {
-        console.warn('Could not load user config:', err)
-    }
+    await userConfig.loadFromCache()
+    userConfig.load().then(() => {
+        dailyWorkHours = userConfig.config.dailyWorkHours || dailyWorkHours
+    }).catch((err) => {
+        console.warn('Could not load user config at startup:', err)
+    })
     const historyModal = new HistoryModal(document.body)
     const settingsModal = new SettingsModal(document.body)
     let cachedHistory = null
