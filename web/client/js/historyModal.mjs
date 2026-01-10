@@ -118,6 +118,8 @@ export class HistoryModal extends Modal {
                                 let iconPostfix = ''
                                 if (entry.type === 'sick') {
                                     iconPostfix = '😷'
+                                } else if (entry.type === 'vacation') {
+                                    iconPostfix = '🏖️'
                                 } else if (entry.type === 'enter') {
                                     iconPostfix = '➡️'
                                 } else if (entry.type === 'exit') {
