@@ -1,4 +1,4 @@
-const cacheName = 'FoxTimeTail-0.5.2'
+const cacheName = 'FoxTimeTail-0.5.3'
 const filesToCache = [
     '/',
     '/js/home.js',
