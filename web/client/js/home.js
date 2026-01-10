@@ -1,5 +1,5 @@
 import { HistoryModal } from "./historyModal.mjs"
-import { History } from "./History.mjs"
+import { History, MODIFIERS } from "./History.mjs"
 
 document.addEventListener('DOMContentLoaded', () => {
     const entranceButton = document.getElementById('entranceButton')
@@ -25,24 +25,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Helper to send presence updates (enter/exit) and handle offline fallback
-    function sendPresenceUpdate(statusLabel) {
+    function sendPresenceUpdate(statusLabel, opts = {}) {
         const pathMap = {
             'enter': '/api/enter',
             'exit': '/api/exit',
             'sick': '/api/sick',
             'vacation': '/api/vacation'
         }
-        fetch(pathMap[statusLabel], { method: 'POST' })
-        .then(response => {
+        const path = pathMap[statusLabel]
+        const isModifier = MODIFIERS.includes(statusLabel)
+        const options = opts.replace ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ replace: true }) } : { method: 'POST' }
+
+        fetch(path, options)
+        .then(async response => {
             if (response.status === 503) {
                 const history = new History()
                 history.add(statusLabel)
                 alert(`You are offline. Your ${statusLabel} will be synced when you are back online.`)
+                return
             }
             if (response.status === 200) {
                 // Improve UX by immediately updating the UI and cached history
                 fetchHistoryFromApi()
                 fetchHistoryInterval.refresh()
+                return
+            }
+            if (response.status === 409 && isModifier) {
+                // Conflict: parse existing modifier and ask user whether to replace
+                let data
+                try { data = await response.json() } catch (e) { data = null }
+                const conflict = data && data.conflict ? data.conflict : 'unknown modifier'
+                const confirmReplace = confirm(`This day is already marked as ${conflict}. Replace with ${statusLabel}?`)
+                if (confirmReplace) {
+                    // Re-run the same logic with replace flag so handling/UX stays consistent
+                    sendPresenceUpdate(statusLabel, { replace: true })
+                }
+                return
             }
         })
         .catch(() => {
