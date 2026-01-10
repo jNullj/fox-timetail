@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const entranceButton = document.getElementById('entranceButton')
     const exitButton = document.getElementById('exitButton')
     const sickButton = document.getElementById('sickButton')
+    const vacationButton = document.getElementById('vacationButton')
     const statusIcon = document.getElementById('statusIcon')
     const currentTime = document.getElementById('currentTime')
     const dayPercentage = document.getElementById('dayPercentage')
@@ -28,7 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const pathMap = {
             'enter': '/api/enter',
             'exit': '/api/exit',
-            'sick': '/api/sick'
+            'sick': '/api/sick',
+            'vacation': '/api/vacation'
         }
         fetch(pathMap[statusLabel], { method: 'POST' })
         .then(response => {
@@ -53,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     entranceButton.addEventListener('click', () => sendPresenceUpdate('enter'))
     exitButton.addEventListener('click', () => sendPresenceUpdate('exit'))
     sickButton.addEventListener('click', () => sendPresenceUpdate('sick'))
+    vacationButton.addEventListener('click', () => sendPresenceUpdate('vacation'))
     historyButton.addEventListener('click', () => {
         historyModal.show()
     })
