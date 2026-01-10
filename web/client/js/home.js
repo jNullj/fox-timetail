@@ -1,7 +1,10 @@
+import { userConfigModal } from "./userConfigModal.mjs"
 import { HistoryModal } from "./historyModal.mjs"
+import { SettingsModal } from "./settingsModal.mjs"
 import { History, DAY_MODIFIERS } from "./History.mjs"
+import { UserConfig } from "./UserConfig.mjs"
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const entranceButton = document.getElementById('entranceButton')
     const exitButton = document.getElementById('exitButton')
     const sickButton = document.getElementById('sickButton')
@@ -10,8 +13,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentTime = document.getElementById('currentTime')
     const dayPercentage = document.getElementById('dayPercentage')
     const historyButton = document.getElementById('historyButton')
-    const workdayMs = 1000 * 60 * 60 * 9  // 9 hours in milliseconds
+    const settingsButton = document.getElementById('settingsButton')
+    // Load user config using the existing `UserConfig` class (uses localStorage fallback)
+    let dailyWorkHours = 9
+    const userConfig = new UserConfig()
+    await userConfig.loadFromCache()
+    userConfig.load().then(() => {
+        dailyWorkHours = userConfig.config.dailyWorkHours || dailyWorkHours
+    }).catch((err) => {
+        console.warn('Could not load user config at startup:', err)
+    })
     const historyModal = new HistoryModal(document.body)
+    const settingsModal = new SettingsModal(document.body)
     let cachedHistory = null
     try {
         const history = new History()
@@ -78,6 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
         historyModal.show()
     })
 
+    settingsModal.addButton('icons/user-config.svg', 'User Config', () => {
+        const userConfig = new userConfigModal(document.body)
+        userConfig.show()
+    })
+    settingsButton.addEventListener('click', () => {
+        settingsModal.show()
+    })
+
     // Fetch history from API once when the page is loaded
     fetchHistoryFromApi()
 
@@ -122,6 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const seconds = Math.floor((sessionTime / 1000) % 60)
         const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
         currentTime.innerText = formattedTime
+        const workdayMs = dailyWorkHours * 60 * 60 * 1000
         dayPercentage.innerText = Math.floor((sessionTime / workdayMs) * 100) + '%'
         statusIcon.className = history.isAtWork() ? 'active' : 'inactive'
     }

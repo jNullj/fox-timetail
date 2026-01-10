@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   sodipodi:docname="user-config.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#000000"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="true"
+     inkscape:zoom="1.6015625"
+     inkscape:cx="256.62439"
+     inkscape:cy="256"
+     inkscape:window-width="1920"
+     inkscape:window-height="1029"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       id="grid3"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="1"
+       spacingy="1"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       enabled="true"
+       visible="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 256 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="512 : 256 : 1"
+       inkscape:persp3d-origin="256 : 170.66667 : 1"
+       id="perspective3" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       sodipodi:type="star"
+       style="fill:#ff6600;fill-opacity:1;stroke:#000000;stroke-width:3.77953;stroke-dasharray:none;stroke-dashoffset:3.60795;stroke-opacity:1"
+       id="path8"
+       inkscape:flatsided="false"
+       sodipodi:sides="3"
+       sodipodi:cx="146.10732"
+       sodipodi:cy="290.34146"
+       sodipodi:r1="193.92419"
+       sodipodi:r2="96.962097"
+       sodipodi:arg1="1.5707963"
+       sodipodi:arg2="2.6179939"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="M 146.10732,484.26566 62.135675,338.82251 -21.835966,193.37937 l 167.943286,-1e-5 167.94327,0 -83.97164,145.44315 z"
+       inkscape:transform-center-y="48.481048"
+       transform="translate(106,16)" />
+    <path
+       id="rect2"
+       style="fill:#fffa1e;fill-opacity:1;stroke:#000000;stroke-width:3.77953;stroke-dasharray:none;stroke-dashoffset:3.60795;stroke-opacity:1"
+       d="M 256.31153,42.52149 A 188.63495,188.63495 0 0 0 67.963867,226.78712 h -18.94922 v 58.6914 H 462.98535 v -58.6914 H 444.65918 A 188.63495,188.63495 0 0 0 256.31153,42.52149 Z" />
+    <rect
+       style="fill:#fffa1e;fill-opacity:1;stroke:#000000;stroke-width:2.15822;stroke-dasharray:none;stroke-dashoffset:3.60795;stroke-opacity:1"
+       id="rect3"
+       width="50.323761"
+       height="87.787178"
+       x="230.83812"
+       y="14.877151" />
+    <path
+       sodipodi:type="star"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:3.77953;stroke-dasharray:none;stroke-dashoffset:3.60795;stroke-opacity:1"
+       id="path9"
+       inkscape:flatsided="false"
+       sodipodi:sides="3"
+       sodipodi:cx="219.78537"
+       sodipodi:cy="498.2634"
+       sodipodi:r1="25.169975"
+       sodipodi:r2="12.584988"
+       sodipodi:arg1="-0.52359878"
+       sodipodi:arg2="0.52359878"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 241.58321,485.67841 -10.89892,18.87748 -10.89892,18.87748 -10.89892,-18.87748 -10.89892,-18.87748 21.79784,0 z"
+       inkscape:transform-center-y="6.2924936"
+       transform="translate(32,-28)" />
+  </g>
+  <metadata
+     id="metadata1">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Jonathan Ketchker</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:date>2025</dc:date>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>

@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import { History, HistoryItem } from './History.mjs'
 import crypto from 'crypto'
+import { UserConfig } from './UserConfig.mjs'
 
 const app = express()
 app.use(bodyParser.json()) // for parsing application/json
@@ -20,6 +21,8 @@ if (!fs.existsSync(__dirname + '/db')) {
 }
 
 let history = new History()
+const userConfig = new UserConfig()
+await userConfig.load()
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/client/home.html')
@@ -27,6 +30,7 @@ app.get('/', (req, res) => {
 
 app.use('/', express.static(__dirname + '/client'))
 app.use('/js/History.mjs', express.static(__dirname + '/History.mjs'))
+app.use('/js/UserConfig.mjs', express.static(__dirname + '/UserConfig.mjs'))
 
 function handleEvent(req, res, eventType) {
     // override time with the time sent in the request (for sync), or use the current time
@@ -250,6 +254,25 @@ app.post('/api/importMonth', (req, res) => {
     } catch (error) {
         console.error(error)
         return res.status(500).send('An error occurred while processing the data')
+    }
+})
+
+app.get('/api/config', async (req, res) => {
+    try {
+        await userConfig.load()
+        res.send(userConfig.config)
+    } catch (error) {
+        res.status(500).send('Failed to load user configuration')
+    }
+})
+
+app.post('/api/config', async (req, res) => {
+    try {
+        userConfig.config = req.body
+        await userConfig.save()
+        res.sendStatus(200)
+    } catch (error) {
+        res.status(500).send('Failed to save user configuration')
     }
 })
 

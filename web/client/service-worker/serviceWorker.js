@@ -10,12 +10,16 @@ const filesToCache = [
     '/js/modal.mjs',
     '/js/historyModal.mjs',
     '/js/History.mjs',
+    '/js/settingsModal.mjs',
+    '/js/userConfigModal.mjs',
+    '/js/UserConfig.mjs'
 ]
 const callsToSync = [
     '/api/enter',
     '/api/exit',
+    '/api/config',
     '/api/sick',
-    '/api/vacation',
+    '/api/vacation'
 ]
 
 // The install event is triggered when the service worker is first installed.
@@ -52,7 +56,7 @@ self.addEventListener('fetch', event => {
                 return response
             }
             const url = new URL(event.request.url)
-            if (!callsToSync.includes(url.pathname)) {
+            if (event.request.method === 'GET' || !callsToSync.includes(url.pathname)) {
                 return fetch(event.request).catch(() => {
                     return new Response('You are offline', {
                         status: 503, statusText: 'Service Unavailable'
@@ -67,7 +71,7 @@ self.addEventListener('fetch', event => {
                     let db = evt.target.result
                     let tx = db.transaction('apiPendingRequestsStore', 'readwrite')
                     let store = tx.objectStore('apiPendingRequestsStore')
-                    let req = store.add({path: url.pathname, time: new Date()})
+                    let req = store.add({path: url.pathname, body: event.request.body, time: new Date()})
                     req.onsuccess = function() {
                         self.registration.sync.register('syncPendingApiRequests')
                     }
@@ -104,7 +108,7 @@ self.addEventListener('sync', event => {
                 if (!cursor) { return }
                 const key = cursor.key
                 const pendingRequest = cursor.value
-                fetch(pendingRequest.path, { method: 'POST', body: JSON.stringify({ time: pendingRequest.time }), headers: { 'Content-Type': 'application/json' }})
+                fetch(pendingRequest.path, { method: 'POST', body: JSON.stringify(pendingRequest.body), headers: { 'Content-Type': 'application/json' }})
                 .then(res => {
                     if (res.ok) {
                         db.transaction('apiPendingRequestsStore', 'readwrite')
