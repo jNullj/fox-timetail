@@ -51,6 +51,7 @@ export class userConfigModal extends Modal {
         label.classList.add('uc-label')
         const input = document.createElement('input')
         input.type = type
+        if (type === 'number') input.step = 'any'
         input.name = name
         if (value !== undefined && value !== null) input.value = value
         input.classList.add('uc-input')
