@@ -89,7 +89,7 @@ app.post('/api/enter', (req, res) => handleEvent(req, res, 'enter'))
 
 app.post('/api/exit', (req, res) => handleEvent(req, res, 'exit'))
 
-app.post('/api/sick', (req, res) => {
+function handleDayToggle(req, res, type) {
     try {
         const body = req.body || {}
         const state = body.state === undefined ? true : Boolean(body.state)
@@ -108,22 +108,40 @@ app.post('/api/sick', (req, res) => {
             targetHistory = new History(time)
         }
 
+        let hasFn, removeFn, addType
+        switch (type) {
+            case 'sick':
+                hasFn = (h, d) => h.hasSickDay(d)
+                removeFn = (h, d) => h.removeSickDay(d)
+                addType = 'sick'
+                break
+            case 'vacation':
+                hasFn = (h, d) => h.hasVacationDay(d)
+                removeFn = (h, d) => h.removeVacationDay(d)
+                addType = 'vacation'
+                break
+            default:
+                return res.status(400).send('Invalid type')
+        }
+
         if (state) {
-            // Add sick if not already present on that day
-            if (!targetHistory.hasSickDay(time)) {
-                targetHistory.add(new HistoryItem('sick', time))
+            if (!hasFn(targetHistory, time)) {
+                targetHistory.add(new HistoryItem(addType, time))
             }
             return res.sendStatus(200)
         } else {
-            // Remove any sick entries for that date
-            targetHistory.removeSickDay(time)
+            removeFn(targetHistory, time)
             return res.sendStatus(200)
         }
     } catch (err) {
         console.error(err)
-        return res.status(500).send('Failed to update sick day')
+        return res.status(500).send(`Failed to update ${type} day`)
     }
-})
+}
+
+app.post('/api/sick', (req, res) => handleDayToggle(req, res, 'sick'))
+
+app.post('/api/vacation', (req, res) => handleDayToggle(req, res, 'vacation'))
 
 app.get('/api/sessionTime', (req, res) => {
     const sessionTime = history.dailyTime()
